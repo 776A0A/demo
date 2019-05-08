@@ -1,4 +1,4 @@
-[JS相关]（#JS相关）
+[JS相关](#JS相关)
 1. [new模拟](#new模拟)
 2. [call模拟](#call模拟)
 3. [bind模拟](#bind模拟)
