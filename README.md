@@ -10,7 +10,11 @@
 2. [点击显示二级下拉菜单及遮罩层](#点击显示二级下拉菜单及遮罩层)
 3. [toast弹窗](#toast弹窗)
 4. [布局相关](#布局相关)
-
+5. [样式重置](#样式重置)
+6. [通用媒体查询](#通用媒体查询)
+7. [全屏背景、内容垂直居中、强制出现垂直滚动条、CSS固定页脚](#全屏背景、内容垂直居中、强制出现垂直滚动条、CSS固定页脚)
+8. [@font-face模板](#@font-face模板)
+9. [基于文件类型的链接样式](#基于文件类型的链接样式)
 
 ----------------------------------------------------------------------------------
 ### JS相关
@@ -251,5 +255,155 @@ document.addEventListener('touchmove', (e) =>{ e.preventDefault() }, { passive: 
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+}
+```
+
+#### 样式重置
+```css
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  outline: none;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+html { height: 101%; }
+body { font-size: 62.5%; line-height: 1; font-family: Arial, Tahoma, sans-serif; }
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section { display: block; }
+ol, ul { list-style: none; }
+blockquote, q { quotes: none; }
+blockquote:before, blockquote:after, q:before, q:after { content: ''; content: none; }
+strong { font-weight: bold; } 
+table { border-collapse: collapse; border-spacing: 0; }
+img { border: 0; max-width: 100%; }
+p { font-size: 1.2em; line-height: 1.0em; color: #333; }
+```
+
+#### 通用媒体查询
+```css
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen 
+and (min-device-width : 320px) and (max-device-width : 480px) {
+  /* Styles */
+}
+
+/* Smartphones (landscape) ----------- */
+@media only screen and (min-width : 321px) {
+  /* Styles */
+}
+
+/* Smartphones (portrait) ----------- */
+@media only screen and (max-width : 320px) {
+  /* Styles */
+}
+
+/* iPads (portrait and landscape) ----------- */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) {
+  /* Styles */
+}
+
+/* iPads (landscape) ----------- */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
+  /* Styles */
+}
+
+/* iPads (portrait) ----------- */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
+  /* Styles */
+}
+
+/* Desktops and laptops ----------- */
+@media only screen and (min-width : 1224px) {
+  /* Styles */
+}
+
+/* Large screens ----------- */
+@media only screen and (min-width : 1824px) {
+  /* Styles */
+}
+
+/* iPhone 4 ----------- */
+@media only screen and (-webkit-min-device-pixel-ratio:1.5), only screen and (min-device-pixel-ratio:1.5) {
+  /* Styles */
+}
+```
+
+#### 全屏背景、内容垂直居中、强制出现垂直滚动条、CSS固定页脚
+```css
+/* 全屏背景 */
+html { 
+    background: url('images/bg.jpg') no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+```
+
+```css
+/* 内容垂直居中 */
+.container {
+    min-height: 6.5em;
+    display: table-cell;
+    vertical-align: middle;
+}
+```
+
+```css
+/* 强制出现垂直滚动条 */
+html { height: 101% }
+```
+
+```css
+/* CSS固定页脚 */
+#footer {
+    position: fixed;
+    left: 0px;
+    bottom: 0px;
+    height: 30px;
+    width: 100%;
+    background: #444;
+}
+```
+
+#### @font-face模板
+```css
+@font-face {
+    font-family: 'MyWebFont';
+    src: url('webfont.eot'); /* IE9 Compat Modes */
+    src: url('webfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    url('webfont.woff') format('woff'), /* Modern Browsers */
+    url('webfont.ttf')  format('truetype'), /* Safari, Android, iOS */
+    url('webfont.svg#svgFontName') format('svg'); /* Legacy iOS */
+}
+
+body {
+    font-family: 'MyWebFont', Arial, sans-serif;
+}
+```
+
+#### 基于文件类型的链接样式
+```css
+/* external links */
+a[href^="http://"] {
+    padding-right: 13px;
+    background: url('external.gif') no-repeat center right;
+}
+
+/* emails */
+a[href^="mailto:"] {
+    padding-right: 20px;
+    background: url('email.png') no-repeat center right;
+}
+
+/* pdfs */
+a[href$=".pdf"] {
+    padding-right: 18px;
+    background: url('acrobat.png') no-repeat center right;
 }
 ```
