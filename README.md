@@ -4,6 +4,7 @@
 3. [bind模拟](#bind模拟)
 4. [jsonp函数封装](#jsonp函数封装)
 5. [二分查找的两种写法](#二分查找的两种写法)
+6. [常用正则验证](#常用正则验证)
 
 [CSS&HTML相关](#CSS&HTML相关)
 1. [显示省略号](#显示省略号)
@@ -116,6 +117,41 @@ function binarySearch_2(arr, value, high, low = 0) {
 		return -1;
 	}
 
+}
+```
+
+#### 常用正则验证
+```javascript
+// checkType ('hjkhjhT','lower')'需要验证的字符串'，'匹配的格式'
+// email：验证邮箱
+// phone：验证手机号
+// tel：验证座机号
+// number：验证数字
+// english：验证英文字母
+// chinese：验证中文字
+// lower：验证小写
+// upper：验证大写
+function checkType (str, type) {
+    switch (type) {
+        case 'email':
+            return /^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/.test(str);
+        case 'phone':
+            return /^1[3|4|5|7|8][0-9]{9}$/.test(str);
+        case 'tel':
+            return /^(0\d{2,3}-\d{7,8})(-\d{1,4})?$/.test(str);
+        case 'number':
+            return /^[0-9]$/.test(str);
+        case 'english':
+            return /^[a-zA-Z]+$/.test(str);
+        case 'chinese':
+            return /^[\u4E00-\u9FA5]+$/.test(str);
+        case 'lower':
+            return /^[a-z]+$/.test(str);
+        case 'upper':
+            return /^[A-Z]+$/.test(str);
+        default :
+            return true;
+    }
 }
 ```
 
@@ -261,18 +297,9 @@ document.addEventListener('touchmove', (e) =>{ e.preventDefault() }, { passive: 
 #### 样式重置
 ```css
 html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  font-size: 100%;
-  font: inherit;
-  vertical-align: baseline;
-  outline: none;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
+  margin: 0; padding: 0; border: 0; font-size: 100%; font: inherit; vertical-align: baseline; outline: none; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;
 }
-html { height: 101%; }
+html { height: 101%; -webkit-text-size-adjust: 100%; -webkit-overflow-scrolling : touch;} /* IOS Safari在横屏的时候会放大字体，第二个属性让滑动更流畅 */
 body { font-size: 62.5%; line-height: 1; font-family: Arial, Tahoma, sans-serif; }
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section { display: block; }
 ol, ul { list-style: none; }
@@ -282,6 +309,10 @@ strong { font-weight: bold; }
 table { border-collapse: collapse; border-spacing: 0; }
 img { border: 0; max-width: 100%; }
 p { font-size: 1.2em; line-height: 1.0em; color: #333; }
+textarea{ resize: none; }
+input:focus, textarea:focus, select:focus{ outline: none; }
+input::-webkit-inner-spin-button{ -webkit-appearance: none; } /* 去掉number输入框右边点击上下的小三角 */
+select{ -webkit-appearance: none; } /* 去掉select的默认样式 */
 ```
 
 #### 通用媒体查询
