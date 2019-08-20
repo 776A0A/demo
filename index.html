@@ -12,13 +12,19 @@
 <body>
   <div id="demo"></div>
   <div id="demo-2"></div>
+  <div id="demo-3"></div>
+  <div id="demo-4"></div>
   <script src="./js/utils.js" type="module"></script>
   <script type="module">
     import utils from './js/utils.js';
-    let { stars } = utils;
+    let { Stars } = utils;
     window.onload = function () {
-      stars(5, 'demo')
-      stars(3, 'demo-2')
+      let whiteStar = './images/xx1.png';
+      let redStar = './images/xx2.png';
+      let s = new Stars()
+      s.baseImagePath(whiteStar, redStar)
+      s.add({ id: 'demo-2' })
+      s.add({ id: 'demo-3', total: 10 })
     }
   </script>
 </body>
