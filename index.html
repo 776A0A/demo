@@ -10,11 +10,12 @@
 </head>
 
 <body>
-  <div id="demo" data-star-index="0"></div>
+  <div id="demo"></div>
   <div id="demo-2"></div>
   <script src="./js/utils.js" type="module"></script>
   <script type="module">
-    import stars from './js/utils.js';
+    import utils from './js/utils.js';
+    let { stars } = utils;
     window.onload = function () {
       stars(5, 'demo')
       stars(3, 'demo-2')
