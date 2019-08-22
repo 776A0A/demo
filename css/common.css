@@ -1,11 +1,11 @@
-* {
+/* * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-}
+} */
 
 /* 上传照片的组件样式 */
-#blank-image {
+/* #blank-image {
   position: relative;
 }
 #blank-image [type="file"] {
@@ -30,4 +30,4 @@
   left: 0;
   background-color: #000;
   display: none;
-}
+} */

@@ -1,0 +1,87 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+#template-container {
+  font-size: 0.7rem;
+  border: 1px solid green;
+}
+#template-container .title {
+  text-align: center;
+  font-size: 1rem;
+  margin-bottom: 1vw;
+}
+#template-container .status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 3vw;
+}
+#template-container #wrapper {
+  border: 1px solid;
+  margin: 0 2vw;
+}
+#template-container #wrapper > div {
+  border-bottom: 1px solid;
+}
+#template-container #wrapper .details-3 {
+  border-bottom: 0;
+}
+#template-container .details-1 > p,
+.details-2 > p,
+.details-3 > p {
+  padding: 0.2rem 0;
+}
+#template-container .details-1 {
+  display: flex;
+  align-items: center;
+}
+#template-container .details-1 p {
+  width: 22vw;
+  border-right: 1px solid;
+  text-align: center;
+}
+#template-container .details-1 p:last-of-type {
+  border-left: 1px solid;
+}
+#template-container .details-1 span {
+  width: 28vw;
+  display: inline-block;
+}
+#template-container .details-2 {
+  display: flex;
+  align-items: center;
+}
+#template-container .details-2 > p:first-of-type {
+  width: 20.6vw;
+  text-align: center;
+}
+#template-container .details-2 > p:last-of-type {
+  flex: 1 1;
+  border-left: 1px solid;
+  padding: 0.5rem;
+}
+#template-container .details-3 {
+  display: flex;
+  align-items: center;
+  height: 30vw;
+}
+#template-container .details-3 p {
+  width: 20.6vw;
+  text-align: center;
+}
+#template-container .details-3 .text {
+  align-self: stretch;
+  border-left: 1.5px solid;
+}
+#template-container .sign,
+#template-container .date {
+  display: flex;
+  align-items: center;
+}
+#template-container .sign p:first-of-type,
+#template-container .date p:first-of-type {
+  width: 50vw;
+  margin-left: 3vw;
+}
