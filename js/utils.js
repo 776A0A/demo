@@ -85,16 +85,20 @@ const utils = {
   },
   /**
    * 图片上传功能并实现预览和点击图片放大
-   * @param {*} className 最外层包裹元素的类名，最好为空
-   * @param {*} blankImage 默认显示的图片
-   * @param {*} url 上传图片的接口
+   * @param {string} className 最外层包裹元素的类名，最好为空
+   * @param {string} blankImage 默认显示的图片
+   * @param {string} url 上传图片的接口
+   * @param {boolean} needPlusImage 是否需要添加点击图片放大功能，默认true
    */
-  uploadImage: class {
-    constructor({ className, blankImage, url }) {
+  UploadImage: class {
+    constructor({ className, blankImage, url, needPlusImage = true }) {
       this.className = className;
       this.blankImage = blankImage;
       this.url = url;
+      this.needPlusImage = needPlusImage;
       this.wrapperArr = [...__(this.className)];
+      this.plusImageInstance = null; // 如果needPlusImage为true，上传照片后就会生成实例
+      this.hasPlusImageInstance = false; // 避免多次初始化放大图片实例
       this.renderHTML()
     }
     renderHTML() {
@@ -113,7 +117,6 @@ const utils = {
         this.setImgStyle()
         this.addClickEventToUpload(elem)
       })
-      this.addPreviewElem()
     }
     setHeadStyle() {
       let head = document.getElementsByTagName('head')[0];
@@ -123,16 +126,8 @@ const utils = {
         #blank-image { position: relative; }
         #blank-image [type="file"] { outline: none; background-color: none; border: none; width: 100%; height: 100%; position: absolute; opacity: 0; }
         #blank-image img.blank-image { margin: 0.5rem; margin-left: 0; }
-        #preview { position: fixed; width: 100%; height: 100%; top: 0; left: 0; background-color: #000; display: none; transition: opacity .5s ease; opacity: 0; z-index: 999;}
       `;
       head.appendChild(style)
-    }
-    addPreviewElem() {
-      let body = document.getElementsByTagName('body')[0]
-      let preview = document.createElement('div')
-      preview.setAttribute('id', 'preview')
-      body.appendChild(preview)
-      this.preview = preview;
     }
     setImgStyle() {
       let imgs = [...document.querySelectorAll(`.${this.className} img`)];
@@ -144,7 +139,6 @@ const utils = {
       let clickToUpload = _('uploadImageInput');
       clickToUpload.addEventListener('change', e => {
         let { newImg, image } = this.createImage(e);
-        this.addNewImageEvent(newImg)
         let uploadedImage = __('uploadedImage')[0];
         elem.insertBefore(newImg, uploadedImage)
         this.uploadAction(image)
@@ -152,6 +146,7 @@ const utils = {
     }
     createImage(e) {
       let image = e.currentTarget.files[0];
+      if (!image) return;
       let imageUrl = URL.createObjectURL(image); // 此种方式可以获取一个可显示的url
       let newImg = document.createElement('img');
       newImg.classList.add('uploadedImage')
@@ -160,24 +155,15 @@ const utils = {
       newImg.style.cssText += `width: 5rem; height: 5rem; margin: .5rem; margin-left: 0;`;
       return { newImg, image };
     }
-    addNewImageEvent(newImg) {
-      newImg.addEventListener('click', e => {
-        let preview = this.preview;
-        preview.innerHTML = `<img src=${e.currentTarget.src} id="fullImage" />`;
-        preview.style.display = 'block';
-        setTimeout(() => { preview.style.opacity = '1'; }, 0) // 为了让过度效果有用
-        let fullImage = _('fullImage')
-        fullImage.style.cssText += `position: absolute; width: 100%; top: 50%; transform: translateY(-50%); max-height: 100%;`
-        preview.addEventListener('click', handlePreviewClick)
-        function handlePreviewClick(e) {
-          preview.style.opacity = '0';
-          setTimeout(() => { preview.style.display = 'none'; }, 500)
-          preview.removeEventListener('click', handlePreviewClick)
-        }
-      })
-    }
     uploadAction(image) {
       console.log('处理上传');
+      if (this.needPlusImage) {
+        if (!this.hasPlusImageInstance) {
+          let ClickToPlusImage = utils.ClickToPlusImage;
+          this.plusImageInstance = new ClickToPlusImage(this.className)
+          this.hasPlusImageInstance = true;
+        }
+      }
       // let file = new File()
       // file.append('image', image)
       // fetch(this.url, {
@@ -202,6 +188,7 @@ const utils = {
       this.setHeadStyle()
       this.addPreviewElem()
       this.clickEvent()
+      this.setPreviewClickEvent()
     }
     setHeadStyle() {
       let head = document.getElementsByTagName('head')[0]
@@ -234,14 +221,23 @@ const utils = {
       preview.innerHTML = `<img src=${img.src} id="fullImage" />`;
       preview.style.display = 'block';
       setTimeout(() => { preview.style.opacity = '1' }, 0)
-      preview.addEventListener('click', handlePreviewClick)
-      function handlePreviewClick(e) {
+    }
+    setPreviewClickEvent() {
+      let preview = this.preview;
+      preview.addEventListener('click', e => {
         preview.style.opacity = '0';
-        setTimeout(() => { preview.style.display = 'none'; }, 500)
-        preview.removeEventListener('click', handlePreviewClick)
-      }
+        setTimeout(() => {
+          preview.style.display = 'none';
+          preview.innerHTML = '';
+        }, 500);
+      })
     }
   },
+  /**
+   * 下滑到一定距离自动加载数据
+   * @param {*} url 请求的地址
+   * @param {*} data 传入的数据
+   */
   SlideToLoadMore: class {
     constructor(url, data) {
       this.url = url;
@@ -252,9 +248,7 @@ const utils = {
       document.addEventListener('touchend', this.loadMore)
     }
     loadMore() {
-      let scrollHeight = document.documentElement.scrollHeight;
-      let scrollTop = document.documentElement.scrollTop;
-      let clientHeight = document.documentElement.clientHeight;
+      let { scrollHeight, scrollTop, clientHeight } = document.documentElement;
       let res = scrollHeight - scrollTop - clientHeight;
       if (res < 500) {
         return fetch(url, {

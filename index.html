@@ -29,7 +29,7 @@
   <script src="./js/utils.js" type="module"></script>
   <script type="module">
     import utils from './js/utils.js';
-    let { Stars, uploadImage, ClickToPlusImage } = utils;
+    let { Stars, UploadImage, ClickToPlusImage } = utils;
     window.onload = function () {
       let whiteStar = './images/xx1.png';
       let redStar = './images/xx2.png';
@@ -37,12 +37,12 @@
       s.baseImagePath(whiteStar, redStar)
       s.add({ id: 'demo-1' })
 
-      new uploadImage({
+      new UploadImage({
         className: 'demo-2', 
-        blankImage: './images/plain.png'
+        blankImage: './images/plain.png',
       })
 
-      new ClickToPlusImage('demo-3')
+      // new ClickToPlusImage('demo-3')
     }
   </script>
 </body>
