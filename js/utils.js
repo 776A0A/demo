@@ -1,6 +1,8 @@
 // mvc m 用来处理数据，不会出现dom操作 v 用来显示数据 c 操作dom等东西
 // 初始化数据 init 中
 // 用户点击v视图，c监听操作，然后通知v，v到数据库调取数据，然后将数据操作后交给c，c再交给v显示
+const _ = id => document.getElementById(id);
+const __ = className => document.getElementsByClassName(className);
 const utils = {
   /**
    * 在页面中添加打星功能
@@ -29,7 +31,7 @@ const utils = {
       this.clickStar(); // 添加点击事件
     }
     renderHTML() {
-      this.wrapper = document.getElementById(this.id);
+      this.wrapper = _(this.id);
       this.prevClickedElem = new WeakMap(); // 用于存储用户上一次点击的元素
       let template = `<img src=${this.image_1} alt="star" class="star">`; // 基本模板
       let html = template;
@@ -40,7 +42,7 @@ const utils = {
       wrapper.style.cssText += `display: flex;align-items: center;position: relative;`; // 包裹元素的基本样式
       wrapper.innerHTML = html;
 
-      let stars = [...document.getElementsByClassName('star')];
+      let stars = [...__('star')];
       stars.forEach(img => { // 星星的基本大小
         img.style.width = '10%';
       })
@@ -92,7 +94,7 @@ const utils = {
       this.className = className;
       this.blankImage = blankImage;
       this.url = url;
-      this.wrapperArr = [...document.getElementsByClassName(this.className)];
+      this.wrapperArr = [...__(this.className)];
       this.renderHTML()
     }
     renderHTML() {
@@ -139,11 +141,11 @@ const utils = {
       })
     }
     addClickEventToUpload(elem) {
-      let clickToUpload = document.getElementById('uploadImageInput');
+      let clickToUpload = _('uploadImageInput');
       clickToUpload.addEventListener('change', e => {
         let { newImg, image } = this.createImage(e);
         this.addNewImageEvent(newImg)
-        let uploadedImage = document.getElementsByClassName('uploadedImage')[0];
+        let uploadedImage = __('uploadedImage')[0];
         elem.insertBefore(newImg, uploadedImage)
         this.uploadAction(image)
       })
@@ -164,12 +166,12 @@ const utils = {
         preview.innerHTML = `<img src=${e.currentTarget.src} id="fullImage" />`;
         preview.style.display = 'block';
         setTimeout(() => { preview.style.opacity = '1'; }, 0) // 为了让过度效果有用
-        let fullImage = document.getElementById('fullImage')
+        let fullImage = _('fullImage')
         fullImage.style.cssText += `position: absolute; width: 100%; top: 50%; transform: translateY(-50%); max-height: 100%;`
         preview.addEventListener('click', handlePreviewClick)
         function handlePreviewClick(e) {
           preview.style.opacity = '0';
-          setTimeout(() => { preview.style.display = 'none'; }, 0)
+          setTimeout(() => { preview.style.display = 'none'; }, 500)
           preview.removeEventListener('click', handlePreviewClick)
         }
       })
@@ -204,7 +206,10 @@ const utils = {
     setHeadStyle() {
       let head = document.getElementsByTagName('head')[0]
       let style = document.createElement('style')
-      style.innerHTML = `#preview { position: fixed; width: 100%; height: 100%; top: 0; left: 0; background-color: #000; display: none; transition: opacity .5s ease; opacity: 0; z-index: 999;}`;
+      style.innerHTML = `
+        #preview {position: fixed; width: 100%; height: 100%; top: 0; left: 0; background-color: #000; display: none; transition: opacity .5s ease; opacity: 0; z-index: 999;}
+        #fullImage {position: absolute; width: 100%; top: 50%; transform: translateY(-50%);}
+      `;
       head.appendChild(style)
     }
     addPreviewElem() {
@@ -215,7 +220,7 @@ const utils = {
       this.preview = preview;
     }
     clickEvent() {
-      let wrapper = document.getElementsByClassName(this.wrapperClassName);
+      let wrapper = __(this.wrapperClassName);
       [...wrapper].forEach(item => {
         item.addEventListener('click', e => {
           let clickElem = e.target;
@@ -229,12 +234,10 @@ const utils = {
       preview.innerHTML = `<img src=${img.src} id="fullImage" />`;
       preview.style.display = 'block';
       setTimeout(() => { preview.style.opacity = '1' }, 0)
-      let displayImage = document.getElementById('fullImage');
-      displayImage.style.cssText += `position: absolute; width: 100%; top: 50%; transform: translateY(-50%);`
       preview.addEventListener('click', handlePreviewClick)
       function handlePreviewClick(e) {
         preview.style.opacity = '0';
-        setTimeout(() => { preview.style.display = 'none'; }, 0)
+        setTimeout(() => { preview.style.display = 'none'; }, 500)
         preview.removeEventListener('click', handlePreviewClick)
       }
     }
