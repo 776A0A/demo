@@ -5,52 +5,35 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>值班委托书</title>
+  <title>demo</title>
   <link rel="stylesheet" href="../css/demo.css">
+  <style>
+    #demo li {
+      height: 200px;
+      border: 1px solid;
+    }
+  </style>
 </head>
 
 <body>
-  <div id="template-container">
-    <div id="template-inner-container">
-      <h1 class="title">黄山精工凹印纸版有限公司制版委托书</h1>
-      <div class="status">
-        <span>修改状态0/A</span>
-        <span>编号：QMR/C-72-05</span>
-      </div>
-      <div id="wrapper">
-        <div class="company-name">委托单位：</div>
-        <div class="details-1">
-          <p>地址</p><span class="text"></span>
-          <p>电话</p><span class="text"></span>
-        </div>
-        <div class="details-1">
-          <p>开户行及账号</p><span class="text"></span>
-          <p>增值税号</p><span class="text"></span>
-        </div>
-        <div class="details-1">
-          <p>交货期</p><span class="text"></span>
-          <p>付款日期</p><span class="text"></span>
-        </div>
-        <div class="details-2">
-          <p>委托内容</p>
-          <p>兹委托黄山精工凹印纸版有限公司：<span class="box"></span>新制 <span class="box"></span>重制 <span class="box"></span>退镀 <span
-              class="box"></span>改制 （）套共（）支，单价按<span
-              class="price"></span>元/支计算，该版费由委托方按双方商定的日期及方式支付，如延期未付，则由委托方承担每天总版费1%的违约金。</p>
-        </div>
-        <div class="details-3">
-          <p>备注</p><span class="text"></span>
-        </div>
-      </div>
-      <div class="sign">
-        <p>委托方签字：</p>
-        <p>被委托方签字：</p>
-      </div>
-      <div class="date">
-        <p>日期</p>
-        <p>日期</p>
-      </div>
-    </div>
-  </div>
+  <ul id="demo">
+    <li>xxxxxxxxx</li>
+    <li>xxxxxxxxx</li>
+    <li>xxxxxxxxx</li>
+    <li>xxxxxxxxx</li>
+    <li>xxxxxxxxx</li>
+    <li>xxxxxxxxx</li>
+    <li>xxxxxxxxx</li>
+    <li>xxxxxxxxx</li>
+    <li>xxxxxxxxx</li>
+    <li>xxxxxxxxx</li>
+  </ul>
+  <!-- <script src="../js/utils.js" type="module"></script> -->
+  <script type="module">
+    import utils from '../js/utils.js'
+    let { slideToLoadMore } = utils;
+    slideToLoadMore()
+  </script>
 </body>
 
 </html>

@@ -191,27 +191,75 @@ const utils = {
     }
   },
   /**
-   * 点击图片放大
-   * @param {*} id 图片列表外层的包裹元素 id
-   * @param {*} previewId 预览图的 wrapper
+   * 点击图片放大，传入包裹元素的className，其内部的所有img标签都可点击放大
+   * @param {*} wrapperClassName 图片列表外层的包裹元素
    */
-  fullScreen(id, previewId) {
-    let preview = document.getElementById(previewId);
-    let wrapper = document.getElementById(id);
-    wrapper.addEventListener('click', e => {
-      let img = e.target;
-      if (img.tagName !== 'IMG') return;
+  ClickToPlusImage: class {
+    constructor(wrapperClassName) {
+      this.wrapperClassName = wrapperClassName;
+      this.setHeadStyle()
+      this.addPreviewElem()
+      this.clickEvent()
+    }
+    setHeadStyle() {
+      let head = document.getElementsByTagName('head')[0]
+      let style = document.createElement('style')
+      style.innerHTML = `#preview { position: fixed; width: 100%; height: 100%; top: 0; left: 0; background-color: #000; display: none; transition: opacity .5s ease; opacity: 0; z-index: 999;}`;
+      head.appendChild(style)
+    }
+    addPreviewElem() {
+      let preview = document.createElement('div')
+      preview.setAttribute('id', 'preview')
+      let body = document.getElementsByTagName('body')[0]
+      body.appendChild(preview)
+      this.preview = preview;
+    }
+    clickEvent() {
+      let wrapper = document.getElementsByClassName(this.wrapperClassName);
+      [...wrapper].forEach(item => {
+        item.addEventListener('click', e => {
+          let clickElem = e.target;
+          if (clickElem.tagName !== 'IMG') return;
+          this.setDisplayImageToPreview(clickElem)
+        })
+      })
+    }
+    setDisplayImageToPreview(img) {
+      let preview = this.preview;
       preview.innerHTML = `<img src=${img.src} id="fullImage" />`;
       preview.style.display = 'block';
+      setTimeout(() => { preview.style.opacity = '1' }, 0)
       let displayImage = document.getElementById('fullImage');
       displayImage.style.cssText += `position: absolute; width: 100%; top: 50%; transform: translateY(-50%);`
       preview.addEventListener('click', handlePreviewClick)
-    })
-    function handlePreviewClick(e) {
-      preview.style.display = 'none';
-      preview.removeEventListener('click', handlePreviewClick)
+      function handlePreviewClick(e) {
+        preview.style.opacity = '0';
+        setTimeout(() => { preview.style.display = 'none'; }, 0)
+        preview.removeEventListener('click', handlePreviewClick)
+      }
     }
-  }
+  },
+  SlideToLoadMore: class {
+    constructor(url, data) {
+      this.url = url;
+      this.data = data;
+      this.init()
+    }
+    init() {
+      document.addEventListener('touchend', this.loadMore)
+    }
+    loadMore() {
+      let scrollHeight = document.documentElement.scrollHeight;
+      let scrollTop = document.documentElement.scrollTop;
+      let clientHeight = document.documentElement.clientHeight;
+      let res = scrollHeight - scrollTop - clientHeight;
+      if (res < 500) {
+        return fetch(url, {
+          method: 'POST',
+        })
+      }
+    }
+  },
 }
 
 export default utils

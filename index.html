@@ -16,11 +16,11 @@
   <div class="demo-2"></div>
 
   <!-- 点击图片放大 -->
-  <!-- <div id="demo-3" style="display: flex; align-items: center; justify-content: center; flex-flow: row wrap; border: 1px solid;">
+  <div class="demo-3" style="display: flex; align-items: center; justify-content: center; flex-flow: row wrap; border: 1px solid;">
     <img src="./images/布局.png" alt="">
     <img src="./images/plain.png" alt="">
     <img src="./images/xx2.png" alt="">
-  </div> -->
+  </div>
 
   <div id="demo-4"></div>
 
@@ -29,7 +29,7 @@
   <script src="./js/utils.js" type="module"></script>
   <script type="module">
     import utils from './js/utils.js';
-    let { Stars, uploadImage, fullScreen } = utils;
+    let { Stars, uploadImage, ClickToPlusImage } = utils;
     window.onload = function () {
       let whiteStar = './images/xx1.png';
       let redStar = './images/xx2.png';
@@ -37,12 +37,12 @@
       s.baseImagePath(whiteStar, redStar)
       s.add({ id: 'demo-1' })
 
-      new uploadImage({
-        className: 'demo-2', 
-        blankImage: './images/plain.png'
-      })
+      // new uploadImage({
+      //   className: 'demo-2', 
+      //   blankImage: './images/plain.png'
+      // })
 
-      // fullScreen('demo-3', 'preview')
+      new ClickToPlusImage('demo-3')
     }
   </script>
 </body>
