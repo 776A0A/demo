@@ -7,32 +7,54 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>demo</title>
   <link rel="stylesheet" href="../css/demo.css">
-  <style>
-    #demo li {
-      height: 200px;
-      border: 1px solid;
-    }
-  </style>
 </head>
 
 <body>
-  <ul id="demo">
-    <li>xxxxxxxxx</li>
-    <li>xxxxxxxxx</li>
-    <li>xxxxxxxxx</li>
-    <li>xxxxxxxxx</li>
-    <li>xxxxxxxxx</li>
-    <li>xxxxxxxxx</li>
-    <li>xxxxxxxxx</li>
-    <li>xxxxxxxxx</li>
-    <li>xxxxxxxxx</li>
-    <li>xxxxxxxxx</li>
-  </ul>
-  <!-- <script src="../js/utils.js" type="module"></script> -->
+  <div id="flowchart-wrapper">
+    <div class="center-line">
+      <span>下单</span>
+    </div>
+    <div class="first-line">
+      <span>硬件已排产</span>
+      <span>软件已排产</span>
+    </div>
+    <div class="next-line">
+      <span>已加机</span>
+      <span class="special-item">文件处理中</span>
+    </div>
+    <div class="next-line">
+      <span>已加机</span>
+      <span class="special-item">文件处理中</span>
+    </div>
+    <!-- <div class="left">
+      <span>已镀铜</span>
+    </div>
+    <div class="left">
+      <span>已镀铜</span>
+    </div> -->
+    <div class="left">
+      <span class="special-item-2">已雕</span>
+    </div>
+    <div class="center-line next-center">
+      <span>已检</span>
+    </div>
+    <div class="first-line">
+      <span>已合格入库</span>
+      <span>正返工</span>
+    </div>
+    <div class="last-line">
+      <span>已包装发运</span>
+      <span>返工已检</span>
+    </div>
+    <!-- <div class="last-line">
+      <span>已包装发运</span>
+      <span>返工已检</span>
+    </div> -->
+  </div>
   <script type="module">
     import utils from '../js/utils.js'
-    let { slideToLoadMore } = utils;
-    slideToLoadMore()
+    // let { SlideToLoadMore } = utils;
+    // new SlideToLoadMore()
   </script>
 </body>
 

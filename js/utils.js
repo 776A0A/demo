@@ -180,7 +180,7 @@ const utils = {
   },
   /**
    * 点击图片放大，传入包裹元素的className，其内部的所有img标签都可点击放大
-   * @param {*} wrapperClassName 图片列表外层的包裹元素
+   * @param {string} wrapperClassName 图片列表外层的包裹元素
    */
   ClickToPlusImage: class {
     constructor(wrapperClassName) {
@@ -235,8 +235,8 @@ const utils = {
   },
   /**
    * 下滑到一定距离自动加载数据
-   * @param {*} url 请求的地址
-   * @param {*} data 传入的数据
+   * @param {string} url 请求的地址
+   * @param {object} data 传入的数据
    */
   SlideToLoadMore: class {
     constructor(url, data) {
@@ -245,18 +245,19 @@ const utils = {
       this.init()
     }
     init() {
-      document.addEventListener('touchend', this.loadMore)
+      document.addEventListener('scroll', this.loadMore)
     }
     loadMore() {
       let { scrollHeight, scrollTop, clientHeight } = document.documentElement;
       let res = scrollHeight - scrollTop - clientHeight;
       if (res < 500) {
-        return fetch(url, {
-          method: 'POST',
-        })
+        // return fetch(url, {
+        //   method: 'POST',
+        // })
       }
     }
   },
+
 }
 
 export default utils

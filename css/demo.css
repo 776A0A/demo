@@ -3,85 +3,233 @@
   padding: 0;
   box-sizing: border-box;
 }
-#template-container {
-  font-size: 0.7rem;
-  border: 1px solid green;
-}
-#template-container .title {
+/* -------------------流程图--------------------- */
+#flowchart-wrapper {
+  width: 100%;
+  padding: 0 10vw;
+  position: relative;
   text-align: center;
   font-size: 1rem;
-  margin-bottom: 1vw;
 }
-#template-container .status {
+/* 每个小元素 */
+#flowchart-wrapper span {
+  display: inline-block;
+  border: 1px solid #999;
+  border-radius: 0.2rem;
+  position: relative;
+  background-color: #fff;
+  width: 25vw;
+  height: 7.5vw;
+  padding: .7vw;
+}
+/* 下方的竖线 */
+#flowchart-wrapper span::before {
+  content: "";
+  position: absolute;
+  background-color: #999;
+  width: 1px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 7.5vw;
+  bottom: -7.5vw;
+}
+/* 所有横排 */
+#flowchart-wrapper > div {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 0 3vw;
+  position: relative;
+  z-index: 2;
+  margin: 7vw auto;
 }
-#template-container #wrapper {
-  border: 1px solid;
-  margin: 0 2vw;
+/* 显示在中间位置的，含有下方的border */
+#flowchart-wrapper > div.center-line {
+  justify-content: center;
+  border-bottom: 1px solid #999;
+  margin-bottom: 0;
+  width: 55vw;
+  padding-bottom: 7vw;
+  padding-top: 7vw;
 }
-#template-container #wrapper > div {
-  border-bottom: 1px solid;
+/* 显示在中间位置的，非第一排的元素，含有上方的border */
+#flowchart-wrapper > div.center-line:not(:first-of-type) {
+  border-top: 1px solid #999;
 }
-#template-container #wrapper .details-3 {
-  border-bottom: 0;
+/* 显示在中间位置的，非第一排的span元素，含有上方的竖线 */
+#flowchart-wrapper > div.center-line:not(:first-of-type) span::after {
+  content: "";
+  position: absolute;
+  background-color: #999;
+  width: 1px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 7.5vw;
+  top: -7.5vw;
 }
-#template-container .details-1 > p,
-.details-2 > p,
-.details-3 > p {
-  padding: 0.2rem 0;
+/* 第一排的span，带有上方的竖线 */
+#flowchart-wrapper > div.first-line span::after {
+  content: "";
+  position: absolute;
+  background-color: #999;
+  width: 1px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 7.5vw;
+  top: -7.5vw;
 }
-#template-container .details-1 {
-  display: flex;
-  align-items: center;
+/* 第二部分中右边的下竖线 */
+#flowchart-wrapper > div .special-item::before {
+  /* 一个 */
+  height: calc(20.5vw + 6px);
+  bottom: calc(-20.5vw - 6px);
+  /* 两个 */
+  /* height: calc(35vw + 6px);
+  bottom: calc(-35vw - 6px); */
+  /* 三个 */
+  /* height: calc(49.5vw + 6px);
+  bottom: calc(-49.5vw - 6px); */
+  /* 多一个增加14.5vw即可 */
 }
-#template-container .details-1 p {
-  width: 22vw;
-  border-right: 1px solid;
-  text-align: center;
+/* 最底下一排，右边的线条 */
+#flowchart-wrapper > div.last-line > span:last-of-type::before {
+  display: block;
+  width: 15.5vw;
+  left: -8vw;
+  top: -11vw;
+  height: 14.5vw;
+  border-left: 1px solid #999;
+  border-bottom: 1px solid #999;
+  background-color: transparent;
 }
-#template-container .details-1 p:last-of-type {
-  border-left: 1px solid;
+/* 最底下一排，左边的竖线 */
+#flowchart-wrapper > div.last-line > span:first-of-type::before {
+  display: block;
+  width: 14.5vw;
+  border-left: 1px solid #999;
+  border-bottom: 1px solid #999;
+  background-color: transparent;
+  height: 0;
+  left: 32vw;
+  top: -11vw;
 }
-#template-container .details-1 span {
-  width: 28vw;
-  display: inline-block;
+#flowchart-wrapper > div.last-line > span {
+  position: relative;
 }
-#template-container .details-2 {
-  display: flex;
-  align-items: center;
+/* 最后面一排中，指向左边的箭头 */
+#flowchart-wrapper > div.last-line > span:first-of-type::after {
+  content: '';
+  position: absolute;
+  border-right: 1px solid #999;
+  border-top: 1px solid #999;
+  width: 5px;
+  height: 5px;
+  transform: rotate(225deg);
+  top: calc(-11.5vw - 1px);
+  left: 25vw;
 }
-#template-container .details-2 > p:first-of-type {
-  width: 20.6vw;
-  text-align: center;
+/* -------------------箭头----------------------- */
+#flowchart-wrapper > div.first-line::after {
+  content: '';
+  position: absolute;
+  border-right: 1px solid #999;
+  border-top: 1px solid #999;
+  width: 5px;
+  height: 5px;
+  transform: rotate(135deg);
+  top: -2vw;
+  left: 11.7vw;
 }
-#template-container .details-2 > p:last-of-type {
-  flex: 1 1;
-  border-left: 1px solid;
-  padding: 0.5rem;
+#flowchart-wrapper > div.first-line::before {
+  content: '';
+  position: absolute;
+  border-right: 1px solid #999;
+  border-top: 1px solid #999;
+  width: 5px;
+  height: 5px;
+  transform: rotate(135deg);
+  top: -2vw;
+  right: 11.7vw;
 }
-#template-container .details-3 {
-  display: flex;
-  align-items: center;
-  height: 30vw;
+#flowchart-wrapper > div.next-line {
+  position: relative;
 }
-#template-container .details-3 p {
-  width: 20.6vw;
-  text-align: center;
+#flowchart-wrapper > div.next-line::after {
+  content: '';
+  position: absolute;
+  border-right: 1px solid #999;
+  border-top: 1px solid #999;
+  width: 5px;
+  height: 5px;
+  transform: rotate(135deg);
+  top: -2vw;
+  left: 11.7vw;
 }
-#template-container .details-3 .text {
-  align-self: stretch;
-  border-left: 1.5px solid;
+#flowchart-wrapper > div.next-line::before {
+  content: '';
+  position: absolute;
+  border-right: 1px solid #999;
+  border-top: 1px solid #999;
+  width: 5px;
+  height: 5px;
+  transform: rotate(135deg);
+  top: -2vw;
+  right: 11.7vw;
 }
-#template-container .sign,
-#template-container .date {
-  display: flex;
-  align-items: center;
+#flowchart-wrapper > div.left {
+  position: relative;
 }
-#template-container .sign p:first-of-type,
-#template-container .date p:first-of-type {
-  width: 50vw;
-  margin-left: 3vw;
+#flowchart-wrapper > div.left:before {
+  content: '';
+  position: absolute;
+  border-right: 1px solid #999;
+  border-top: 1px solid #999;
+  width: 5px;
+  height: 5px;
+  transform: rotate(135deg);
+  top: -2vw;
+  left: 11.7vw;
+}
+#flowchart-wrapper > div.last-line {
+  position: relative;
+}
+#flowchart-wrapper > div.last-line:before {
+  content: '';
+  position: absolute;
+  border-right: 1px solid #999;
+  border-top: 1px solid #999;
+  width: 5px;
+  height: 5px;
+  transform: rotate(135deg);
+  top: -2vw;
+  left: 11.7vw;
+}
+#flowchart-wrapper > div.last-line:after {
+  content: '';
+  position: absolute;
+  border-right: 1px solid #999;
+  border-top: 1px solid #999;
+  width: 5px;
+  height: 5px;
+  transform: rotate(135deg);
+  top: -2vw;
+  right: 11.7vw;
+}
+/* 文字 */
+#flowchart-wrapper > div.center-line.next-center::before {
+  content: '合格';
+  color: #999;
+  bottom: 0vw;
+  left: 25%;
+  transform: translateX(-25%);
+  position: absolute;
+  font-size: .7rem;
+}
+#flowchart-wrapper > div.center-line.next-center::after {
+  content: '不合格';
+  color: #999;
+  bottom: 0vw;
+  right: 25%;
+  transform: translateX(25%);
+  position: absolute;
+  font-size: .7rem;
 }
