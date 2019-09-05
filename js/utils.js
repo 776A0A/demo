@@ -1,11 +1,11 @@
-// mvc m 用来处理数据，不会出现dom操作 v 用来显示数据 c 操作dom等东西
+// mvc m 用来处理数据，不会出现dom操作 v 用来获取数据 c 操作dom等东西
 // 初始化数据 init 中
 // 用户点击v视图，c监听操作，然后通知v，v到数据库调取数据，然后将数据操作后交给c，c再交给v显示
 const _ = id => document.getElementById(id);
 const __ = className => document.getElementsByClassName(className);
 const utils = {
   /**
-   * 在页面中添加打星功能
+   * 在页面中添加打星评分功能
    * 所选的星星的编号 index 将存在包裹元素的 dataset 上
    * @param {number} total 每排所需要的星星
    * @param {string} id 包裹元素的 id，注意包裹元素必须为空，否则星星编号会出现差错
@@ -13,11 +13,10 @@ const utils = {
    * @param {string} image_2 需要替换的图片路径
   */
   Stars: class {
-    baseImagePath(...rest) {
+    setBaseImage(...rest) { // 用于指定默认图片
       if (rest.length > 2) throw Error('只能传入两张图片！');
-      let [image_1, image_2] = rest;
-      this.image_1 = image_1;
-      this.image_2 = image_2;
+      this.image_1 = rest[0];
+      this.image_2 = rest[1];
       this.initImage = true; // 用于标记是否使用过设置默认图片
     }
     add({ id, total = 5, image_1, image_2 }) { // 生成 stars
@@ -31,21 +30,16 @@ const utils = {
       this.clickStar(); // 添加点击事件
     }
     renderHTML() {
-      this.wrapper = _(this.id);
+      this.wrapper = _(this.id); // 包裹元素
       this.prevClickedElem = new WeakMap(); // 用于存储用户上一次点击的元素
       let template = `<img src=${this.image_1} alt="star" class="star">`; // 基本模板
       let html = template;
-      for (let i = 1; i < this.total; i++) {
-        html += template;
-      }
-      let wrapper = this.wrapper;
+      for (let i = 1; i < this.total; i++) { html += template; }
       wrapper.style.cssText += `display: flex;align-items: center;position: relative;`; // 包裹元素的基本样式
-      wrapper.innerHTML = html;
-
+      this.wrapper.innerHTML = html;
       let stars = [...__('star')];
-      stars.forEach(img => { // 星星的基本大小
-        img.style.width = '10%';
-      })
+      // 星星的大小
+      stars.forEach(img => { img.style.width = '10%'; })
     }
     clickStar() {
       let { wrapper, image_1, image_2 } = this;
@@ -53,33 +47,25 @@ const utils = {
         let ELEM = e.target;
         if (ELEM.tagName !== 'IMG') return;
         let index = [...wrapper.children].findIndex(item => item === ELEM) // 当前点击元素在同级元素中的 index
-        let currentSrc = ELEM.getAttribute('src');
         let currentElem = e.target;
-        if (currentSrc === image_1) {
+        if (ELEM.src === image_1) {
           let _currentElem = e.target;
-          _currentElem.setAttribute('src', image_2)
-          // TODO 在处理这个的时候能不能封装个函数？
-          while (currentElem = currentElem.previousSibling) {
-            currentElem.setAttribute('src', image_2)
-          }
-          while (_currentElem = _currentElem.nextSibling) {
-            _currentElem.setAttribute('src', image_1)
-          }
+          _currentElem.src = image_2;
+          while (currentElem = currentElem.previousSibling) { currentElem.src = image_2; }
+          while (_currentElem = _currentElem.nextSibling) { _currentElem.src = image_1; }
           wrapper.dataset.starIndex = index + 1; // 将用户点击的星星的编号存入包裹元素的dataset上
         } else {
           if (this.prevClickedElem.get(wrapper) === ELEM) {
-            [...wrapper.children].forEach(item => {
-              item.setAttribute('src', image_1)
-            })
+            [...wrapper.children].forEach(item => item.src = image_1 )
             wrapper.dataset.starIndex = '';
           } else {
             while (currentElem = currentElem.nextSibling) {
-              currentElem.setAttribute('src', image_1)
+              currentElem.src = image_1;
               wrapper.dataset.starIndex = index + 1;
             }
           }
         }
-        this.prevClickedElem.set(wrapper, ELEM) // 更新星星
+        this.prevClickedElem.set(wrapper, ELEM) // 更新上次点击的星星
       })
     }
   },
@@ -95,8 +81,8 @@ const utils = {
       this.className = className;
       this.blankImage = blankImage;
       this.url = url;
-      this.needPlusImage = needPlusImage;
       this.wrapperArr = [...__(this.className)];
+      this.needPlusImage = needPlusImage;
       this.plusImageInstance = null; // 如果needPlusImage为true，上传照片后就会生成实例
       this.hasPlusImageInstance = false; // 避免多次初始化放大图片实例
       this.renderHTML()
@@ -122,7 +108,7 @@ const utils = {
       let head = document.getElementsByTagName('head')[0];
       let style = document.createElement('style');
       style.innerHTML = `
-        * { padding: 0; margin: 0; box-sizing: border-box; }
+        *{ padding: 0; margin: 0; box-sizing: border-box; }
         #blank-image { position: relative; }
         #blank-image [type="file"] { outline: none; background-color: none; border: none; width: 100%; height: 100%; position: absolute; opacity: 0; }
         #blank-image img.blank-image { margin: 0.5rem; margin-left: 0; }
@@ -131,16 +117,14 @@ const utils = {
     }
     setImgStyle() {
       let imgs = [...document.querySelectorAll(`.${this.className} img`)];
-      imgs.forEach(img => {
-        img.style.cssText += `width: 5rem; height: 5rem; margin: .5rem; margin-left: 0;`;
-      })
+      imgs.forEach(img => { img.style.cssText += `width: 5rem; height: 5rem; margin: .5rem; margin-left: 0;`; })
     }
     addClickEventToUpload(elem) {
       let clickToUpload = _('uploadImageInput');
       clickToUpload.addEventListener('change', e => {
-        let { newImg, image } = this.createImage(e);
+        let { newImgElem, image } = this.createImage(e);
         let uploadedImage = __('uploadedImage')[0];
-        elem.insertBefore(newImg, uploadedImage)
+        elem.insertBefore(newImgElem, uploadedImage)
         this.uploadAction(image)
       })
     }
@@ -148,21 +132,18 @@ const utils = {
       let image = e.currentTarget.files[0];
       if (!image) return;
       let imageUrl = URL.createObjectURL(image); // 此种方式可以获取一个可显示的url
-      let newImg = document.createElement('img');
-      newImg.classList.add('uploadedImage')
-      newImg.src = imageUrl;
-      newImg.setAttribute('alt', 'uploadedImage')
-      newImg.style.cssText += `width: 5rem; height: 5rem; margin: .5rem; margin-left: 0;`;
-      return { newImg, image };
+      let newImgElem = document.createElement('img');
+      newImgElem.classList.add('uploadedImage')
+      newImgElem.src = imageUrl;
+      newImgElem.setAttribute('alt', 'uploadedImage')
+      newImgElem.style.cssText += `width: 5rem; height: 5rem; margin: .5rem; margin-left: 0;`;
+      return { newImgElem, image };
     }
     uploadAction(image) {
-      console.log('处理上传');
-      if (this.needPlusImage) {
-        if (!this.hasPlusImageInstance) {
+      if (this.needPlusImage && !this.hasPlusImageInstance) {
           let ClickToPlusImage = utils.ClickToPlusImage;
           this.plusImageInstance = new ClickToPlusImage(this.className)
           this.hasPlusImageInstance = true;
-        }
       }
       // let file = new File()
       // file.append('image', image)
@@ -193,6 +174,7 @@ const utils = {
     setHeadStyle() {
       let head = document.getElementsByTagName('head')[0]
       let style = document.createElement('style')
+      // 预览图的样式
       style.innerHTML = `
         #preview {position: fixed; width: 100%; height: 100%; top: 0; left: 0; background-color: #000; display: none; transition: opacity .5s ease; opacity: 0; z-index: 999;}
         #fullImage {position: absolute; width: 100%; top: 50%; transform: translateY(-50%);}
@@ -208,11 +190,11 @@ const utils = {
     }
     clickEvent() {
       let wrapper = __(this.wrapperClassName);
-      [...wrapper].forEach(item => {
+      [...wrapper].forEach(item => { // 为每个包裹元素添加点击事件
         item.addEventListener('click', e => {
-          let clickElem = e.target;
-          if (clickElem.tagName !== 'IMG') return;
-          this.setDisplayImageToPreview(clickElem)
+          let clickedElem = e.target;
+          if (clickedElem.tagName !== 'IMG') return;
+          this.setDisplayImageToPreview(clickedElem)
         })
       })
     }
@@ -220,7 +202,7 @@ const utils = {
       let preview = this.preview;
       preview.innerHTML = `<img src=${img.src} id="fullImage" />`;
       preview.style.display = 'block';
-      setTimeout(() => { preview.style.opacity = '1' }, 0)
+      setTimeout(() => { preview.style.opacity = '1' }, 0) // 渐变
     }
     setPreviewClickEvent() {
       let preview = this.preview;
@@ -257,7 +239,6 @@ const utils = {
       }
     }
   },
-
 }
 
 export default utils

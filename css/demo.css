@@ -3,7 +3,7 @@
   padding: 0;
   box-sizing: border-box;
 }
-/* -------------------流程图--------------------- */
+/* ------------------流程图--------------------- */
 #flowchart-wrapper {
   width: 100%;
   padding: 0 10vw;
@@ -13,15 +13,17 @@
 }
 /* 每个小元素 */
 #flowchart-wrapper span {
-  display: inline-block;
+  display: block;
   border: 1px solid #999;
   border-radius: 0.2rem;
   position: relative;
   background-color: #fff;
   width: 25vw;
   height: 7.5vw;
-  padding: .7vw;
+  padding: 0.7vw;
+  margin: 7vw auto;
 }
+
 /* 下方的竖线 */
 #flowchart-wrapper span::before {
   content: "";
@@ -33,30 +35,27 @@
   height: 7.5vw;
   bottom: -7.5vw;
 }
-/* 所有横排 */
 #flowchart-wrapper > div {
   display: flex;
-  align-items: center;
   justify-content: space-between;
   position: relative;
   z-index: 2;
-  margin: 7vw auto;
+}
+#flowchart-wrapper .center-line {
+  justify-content: center;
 }
 /* 显示在中间位置的，含有下方的border */
 #flowchart-wrapper > div.center-line {
-  justify-content: center;
   border-bottom: 1px solid #999;
-  margin-bottom: 0;
   width: 55vw;
-  padding-bottom: 7vw;
-  padding-top: 7vw;
+  margin: auto;
 }
 /* 显示在中间位置的，非第一排的元素，含有上方的border */
-#flowchart-wrapper > div.center-line:not(:first-of-type) {
+#flowchart-wrapper .second-center-line {
   border-top: 1px solid #999;
 }
-/* 显示在中间位置的，非第一排的span元素，含有上方的竖线 */
-#flowchart-wrapper > div.center-line:not(:first-of-type) span::after {
+/* 第二个中间元素的上面竖线 */
+#flowchart-wrapper .second-center-line span::after {
   content: "";
   position: absolute;
   background-color: #999;
@@ -66,8 +65,9 @@
   height: 7.5vw;
   top: -7.5vw;
 }
-/* 第一排的span，带有上方的竖线 */
-#flowchart-wrapper > div.first-line span::after {
+/* 第一排上面的竖线 */
+#flowchart-wrapper .left-line span:first-of-type::after,
+#flowchart-wrapper .right-line span:first-of-type::after {
   content: "";
   position: absolute;
   background-color: #999;
@@ -77,21 +77,21 @@
   height: 7.5vw;
   top: -7.5vw;
 }
-/* 第二部分中右边的下竖线 */
-#flowchart-wrapper > div .special-item::before {
+/* 右边的最特殊的一根竖线 */
+#flowchart-wrapper .first-inner-wrapper .right-line span:last-of-type::before {
   /* 一个 */
-  height: calc(20.5vw + 6px);
-  bottom: calc(-20.5vw - 6px);
+  /* height: calc(20.5vw + 6px);
+  bottom: calc(-20.5vw - 6px); */
   /* 两个 */
-  /* height: calc(35vw + 6px);
-  bottom: calc(-35vw - 6px); */
+  height: calc(35vw + 6px);
+  bottom: calc(-35vw - 6px);
   /* 三个 */
   /* height: calc(49.5vw + 6px);
   bottom: calc(-49.5vw - 6px); */
   /* 多一个增加14.5vw即可 */
 }
-/* 最底下一排，右边的线条 */
-#flowchart-wrapper > div.last-line > span:last-of-type::before {
+/* 最下排右边 */
+#flowchart-wrapper .second-inner-wrapper .right-line span:last-of-type::before {
   display: block;
   width: 15.5vw;
   left: -8vw;
@@ -101,10 +101,10 @@
   border-bottom: 1px solid #999;
   background-color: transparent;
 }
-/* 最底下一排，左边的竖线 */
-#flowchart-wrapper > div.last-line > span:first-of-type::before {
+/* 最下排左边 */
+#flowchart-wrapper .second-inner-wrapper .left-line span:last-of-type::before {
   display: block;
-  width: 14.5vw;
+  width: 14vw;
   border-left: 1px solid #999;
   border-bottom: 1px solid #999;
   background-color: transparent;
@@ -112,12 +112,10 @@
   left: 32vw;
   top: -11vw;
 }
-#flowchart-wrapper > div.last-line > span {
-  position: relative;
-}
-/* 最后面一排中，指向左边的箭头 */
-#flowchart-wrapper > div.last-line > span:first-of-type::after {
-  content: '';
+/* ----------------------箭头-------------------- */
+/* 最下排左边箭头 */
+#flowchart-wrapper .second-inner-wrapper .left-line span:last-of-type::after {
+  content: "";
   position: absolute;
   border-right: 1px solid #999;
   border-top: 1px solid #999;
@@ -127,9 +125,7 @@
   top: calc(-11.5vw - 1px);
   left: 25vw;
 }
-/* -------------------箭头----------------------- */
-#flowchart-wrapper > div.first-line::after {
-  content: '';
+#flowchart-wrapper .arrow {
   position: absolute;
   border-right: 1px solid #999;
   border-top: 1px solid #999;
@@ -139,97 +135,20 @@
   top: -2vw;
   left: 11.7vw;
 }
-#flowchart-wrapper > div.first-line::before {
-  content: '';
-  position: absolute;
-  border-right: 1px solid #999;
-  border-top: 1px solid #999;
-  width: 5px;
-  height: 5px;
-  transform: rotate(135deg);
-  top: -2vw;
-  right: 11.7vw;
-}
-#flowchart-wrapper > div.next-line {
-  position: relative;
-}
-#flowchart-wrapper > div.next-line::after {
-  content: '';
-  position: absolute;
-  border-right: 1px solid #999;
-  border-top: 1px solid #999;
-  width: 5px;
-  height: 5px;
-  transform: rotate(135deg);
-  top: -2vw;
-  left: 11.7vw;
-}
-#flowchart-wrapper > div.next-line::before {
-  content: '';
-  position: absolute;
-  border-right: 1px solid #999;
-  border-top: 1px solid #999;
-  width: 5px;
-  height: 5px;
-  transform: rotate(135deg);
-  top: -2vw;
-  right: 11.7vw;
-}
-#flowchart-wrapper > div.left {
-  position: relative;
-}
-#flowchart-wrapper > div.left:before {
-  content: '';
-  position: absolute;
-  border-right: 1px solid #999;
-  border-top: 1px solid #999;
-  width: 5px;
-  height: 5px;
-  transform: rotate(135deg);
-  top: -2vw;
-  left: 11.7vw;
-}
-#flowchart-wrapper > div.last-line {
-  position: relative;
-}
-#flowchart-wrapper > div.last-line:before {
-  content: '';
-  position: absolute;
-  border-right: 1px solid #999;
-  border-top: 1px solid #999;
-  width: 5px;
-  height: 5px;
-  transform: rotate(135deg);
-  top: -2vw;
-  left: 11.7vw;
-}
-#flowchart-wrapper > div.last-line:after {
-  content: '';
-  position: absolute;
-  border-right: 1px solid #999;
-  border-top: 1px solid #999;
-  width: 5px;
-  height: 5px;
-  transform: rotate(135deg);
-  top: -2vw;
-  right: 11.7vw;
-}
-/* 文字 */
-#flowchart-wrapper > div.center-line.next-center::before {
-  content: '合格';
+/* ---------------文字------------------ */
+#flowchart-wrapper > div.second-center-line::before {
+  content: "合格";
   color: #999;
   bottom: 0vw;
-  left: 25%;
-  transform: translateX(-25%);
+  left: 6vw;
   position: absolute;
-  font-size: .7rem;
+  font-size: 0.7rem;
 }
-#flowchart-wrapper > div.center-line.next-center::after {
-  content: '不合格';
+#flowchart-wrapper > div.second-center-line::after {
+  content: "不合格";
   color: #999;
   bottom: 0vw;
-  right: 25%;
-  transform: translateX(25%);
+  right: 3.5vw;
   position: absolute;
-  font-size: .7rem;
+  font-size: 0.7rem;
 }
