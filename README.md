@@ -5,6 +5,7 @@
 4. [jsonp函数封装](#jsonp函数封装)
 5. [二分查找的两种写法](#二分查找的两种写法)
 6. [常用正则验证](#常用正则验证)
+7. [判断客户端](#判断客户端)
 
 [CSS&HTML相关](#CSS&HTML相关)
 1. [显示省略号](#显示省略号)
@@ -93,7 +94,7 @@ function binarySearch_1(arr, value) {
 		high = arr.length - 1;
 	while (low <= high) {
 		let mid = parseInt((low + high) / 2);
-		if (mid === arr[mid]) {
+		if (value === arr[mid]) {
 			return mid;
 		} else if (value < arr[mid]) { // 折半
 			high = mid + 1;
@@ -152,6 +153,26 @@ function checkType (str, type) {
         default :
             return true;
     }
+}
+```
+
+#### 判断客户端
+```javascript
+function IsPC() {
+   let userAgentInfo = navigator.userAgent;
+   let Agents = ["Android", "iPhone","SymbianOS", "Windows Phone","iPad", "iPod"];
+   let flag = true;
+   for (let i = 0; i < Agents.length; i++) {
+      if (userAgentInfo.indexOf(Agents[i]) > 0) {
+         flag = false;
+         break;
+      }
+   }
+   return flag;
+}
+// 或者
+if (/(iPhone|iPad|iPod|iOS|Android)/i.test(navigator.userAgent)) { //移动端
+    // do something...
 }
 ```
 
