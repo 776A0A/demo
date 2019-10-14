@@ -3,3 +3,301 @@
   padding: 0;
   box-sizing: border-box;
 }
+p {
+  font-size: 13px;
+}
+input,
+button {
+  outline: none;
+  background: transparent;
+  border: 1px solid #fff;
+  padding: 0.5rem;
+  font-size: 12px;
+}
+textarea {
+  resize: none;
+}
+.text {
+  line-height: 2;
+}
+ul {
+  list-style: none;
+}
+h1 {
+  font-weight: normal;
+}
+/* 顶部 */
+header {
+  background: #000 url(../images/background-image-1.png) no-repeat;
+  color: #fff;
+  text-align: center;
+  background-size: cover;
+}
+.mask {
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 3rem 10rem;
+}
+.mask > h1 {
+  padding: 2rem;
+  padding-top: 3rem;
+}
+.mask > .text {
+  padding-bottom: 2rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+.header-div {
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  margin-bottom: 3rem;
+  padding: 1.5rem;
+  border-radius: 2px;
+}
+.header-div h3 {
+  font-size: 16px;
+  font-weight: normal;
+  margin-bottom: 0.5rem;
+}
+.header-div form {
+  padding: 1.5rem;
+}
+.header-div .text {
+  color: rgba(255, 255, 255, 0.5);
+}
+.header-div form > input {
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 2px;
+}
+.header-div .email::placeholder,
+.header-div .password::placeholder {
+  color: #fff;
+}
+.header-div .submit-button {
+  background-color: #fff;
+}
+/* ------------------------------------------------- */
+section {
+  padding: 3rem 10rem;
+}
+.accessibility > p,
+.accessibility > h1 {
+  text-align: center;
+}
+.accessibility > p {
+  margin-bottom: 1rem;
+}
+.accessibility > ul {
+  display: flex;
+  flex-flow: row wrap;
+}
+.accessibility > ul li {
+  flex-basis: 45%;
+  margin-top: 2.5rem;
+}
+/* ------------------------------------------------ */
+.support-china {
+  background: #fff url(../images/background-image-2.png) no-repeat;
+  background-size: cover;
+  display: flex;
+  justify-content: space-between;
+  padding: 0;
+  color: #fff;
+}
+.support-china .mask {
+  display: flex;
+  justify-content: space-between;
+  color: #fff;
+  padding-right: 0;
+}
+.support-china .mask > img {
+  width: 50%;
+  padding: 2rem;
+  padding-right: 0;
+  border: 1px solid #fff;
+  border-right: 0;
+  border-top-left-radius: 25px;
+  border-bottom-left-radius: 25px;
+  margin-left: 4rem;
+}
+.support-china .mask > div > p {
+  margin: 2rem 0;
+}
+.support-china .try-product {
+  color: #fff;
+}
+.support-china .check-out {
+  background-color: #fff;
+}
+/* -------------------------------------------------------- */
+.products {
+  border-bottom: 1px solid #e7e7e7;
+  text-align: center;
+}
+.product-lists {
+  display: flex;
+  margin: 2rem;
+  margin-bottom: 0;
+  justify-content: space-between;
+}
+.product-lists h4 {
+  margin-bottom: 1rem;
+}
+.product-lists div {
+  flex-basis: 30%;
+}
+.product-lists div p {
+  color: #a0a0a0;
+}
+/* ----------------------------------------------------- */
+.learn {
+  display: flex;
+  flex-flow: column;
+  border-bottom: 1px solid #e7e7e7;
+}
+.learn img {
+  width: 310px;
+  height: 190px;
+  object-fit: cover;
+}
+.learn > div:first-child {
+  margin-bottom: 2rem;
+}
+.learn > div:first-child img {
+  float: left;
+  margin-right: 2rem;
+}
+.learn > div:last-child img {
+  float: right;
+  margin-left: 2rem;
+}
+.learn h4 {
+  font-weight: normal;
+  margin-bottom: 1rem;
+}
+.learn p {
+  color: #a0a0a0;
+}
+/* -------------------------------------------- */
+.crew {
+  text-align: center;
+  border-bottom: 1px solid #e7e7e7;
+}
+.crew img {
+  width: 100%;
+  height: 80%;
+  object-fit: cover;
+}
+.crew ul {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+}
+.crew ul li {
+  position: relative;
+  overflow: hidden;
+  color: #ccc;
+  flex: 1 0 40%;
+  margin: 1rem;
+}
+.crew ul li:nth-child(2n + 1) {
+  margin-right: 0.5rem;
+}
+.crew ul li:first-child,
+.crew ul li:nth-child(2) {
+  margin-bottom: -3rem;
+}
+.crew ul li > div {
+  transition: opacity 0.5s ease;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 80%;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  opacity: 0;
+}
+.crew ul li:hover > div {
+  opacity: 1;
+}
+.crew h5 {
+  font-weight: normal;
+}
+.crew p {
+  font-size: 10px;
+}
+/* ----------------------------------------------------- */
+.contact {
+  display: flex;
+  justify-content: space-between;
+}
+.contact form {
+  border: 1px solid #d4d3d3;
+  text-align: center;
+  flex: 1;
+  display: flex;
+  flex-flow: column;
+  border-radius: 2px;
+  margin-right: 2rem;
+}
+.contact form h5 {
+  margin: 1rem 0;
+}
+.contact form input,
+.contact form textarea {
+  border: 1px solid #d4d3d3;
+  margin: 0 2rem;
+  margin-bottom: 1rem;
+  border-radius: 2px;
+}
+.contact form textarea {
+  height: 6rem;
+  padding: 0.5rem;
+}
+.contact .send {
+  background-color: #000;
+  color: #fff;
+  border-color: #000;
+}
+.contact > div {
+  flex: 1;
+}
+.contact > div h1 {
+  margin: 2rem 0;
+}
+.contact > div p {
+  color: #a0a0a0;
+  margin-bottom: 2rem;
+}
+.contact > div ul {
+  font-size: 11px;
+}
+.contact > div li {
+  margin: 1rem 0;
+}
+/* -------------------------------------------------------------- */
+footer {
+  background-color: #000;
+  color: #fff;
+  display: flex;
+  justify-content: space-around;
+  font-size: 12px;
+}
+footer ul,
+footer > div {
+  margin: 3rem 1rem;
+}
+footer ul li {
+  margin: .5rem 0;
+}
+footer > div p {
+  margin: .5rem 0;
+}
+footer * {
+  color: #6C6C6C;
+}
+footer .title {
+  color: #fff;
+}
