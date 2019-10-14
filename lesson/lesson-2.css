@@ -1,0 +1,75 @@
+.wrapper {
+  height: 100vh;
+  overflow: hidden;
+}
+body {
+  font-size: 12px;
+}
+ /* ---------------------------第一列------------------------------  */
+.first-nav {
+  padding: 10px;
+}
+
+.first-nav li {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+  background-color: #fff;
+}
+.first-nav-footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  font-size: 0;
+  padding: 10px 15px;
+}
+.first-nav-footer span {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: #fff;
+}
+.first-nav-footer span:first-child {
+  margin-right: 10px;
+}
+/* -----------------------第二列-------------------- */
+.second-nav {
+  padding: 10px;
+  color: #B7C0CD;
+}
+/* --------------------基础布局----------------- */
+.first-nav,
+.second-nav,
+.user-lists {
+  float: left;
+}
+.right-wrapper,
+.user-info,
+.articles {
+  display: table-cell;
+  width: 9999px;
+}
+.first-nav,
+.second-nav,
+.user-lists,
+.articles {
+  padding-bottom: 9999px;
+  margin-bottom: -9999px;
+}
+.first-nav {
+  background-color: #1D2531;
+}
+.second-nav {
+  background-color: #222C3C;
+}
+.user-info {
+  background-color: yellow;
+}
+.user-lists {
+  background-color: green;
+}
+.articles {
+  background-color: cyan;
+}
