@@ -7,6 +7,7 @@ input,
 button {
   outline: none;
   background: transparent;
+  border: none;
 }
 textarea {
   resize: none;

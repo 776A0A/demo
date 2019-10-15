@@ -5,7 +5,7 @@
 body {
   font-size: 12px;
 }
- /* ---------------------------第一列------------------------------  */
+/* ---------------------------第一列------------------------------  */
 .first-nav {
   padding: 10px;
 }
@@ -37,7 +37,172 @@ body {
 /* -----------------------第二列-------------------- */
 .second-nav {
   padding: 10px;
-  color: #B7C0CD;
+  color: #b7c0cd;
+}
+.first-line,
+.second-line {
+  border-bottom: 1px solid #2a3547;
+}
+.second-nav h3 {
+  margin: 1rem 0;
+  font-size: 13px;
+  color: #5b6779;
+}
+.second-nav > div li {
+  margin-bottom: 0.5rem;
+  position: relative;
+  padding-right: 2rem;
+}
+.second-nav > div li.active::before {
+  content: "";
+  position: absolute;
+  left: -0.5rem;
+  height: 15%;
+  width: 1px;
+  background-color: #269bf3;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.second-nav > div li.hasMsgNumber::after {
+  content: attr(data-msg-number);
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #fff;
+  background-color: #2499f2;
+  padding: 0.1rem 0.2rem;
+  border-radius: 6px;
+  font-size: 10px;
+  width: 1rem;
+  text-align: center;
+}
+.last-line {
+  position: fixed;
+  bottom: 20px;
+  left: 80px;
+  font-size: 11px;
+  color: #fff;
+}
+.last-line::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 47%;
+  height: 2px;
+  background: linear-gradient(to right, rgba(128, 91, 230, 1) 0%, rgba(155, 141, 227, 1) 100%);
+  border-radius: 2px;
+}
+.last-line span:last-child {
+  margin-left: 10px;
+}
+/* ------------------------------------------------------- */
+.user-info {
+  padding: 10px;
+  border-bottom: 1px solid #e6e9ec;
+}
+.user-info .inner-user-info {
+  float: right;
+  position: relative;
+}
+.user-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 10px;
+  display: inline-block;
+  line-height: 20px;
+}
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  float: left;
+  background-color: #e6e9ec;
+}
+.user-name {
+  color: #2399f1;
+}
+.user-identity {
+  font-size: 11px;
+}
+.user-info > span {
+  display: inline-block;
+  line-height: 40px;
+  font-size: 15px;
+}
+/* ---------------------------------------------------- */
+.user-lists {
+}
+.user-lists ul {
+  overflow-y: auto;
+}
+.user-lists li,
+.search-bar {
+  padding: 10px;
+  border-bottom: 1px solid #e6e9ec;
+  padding-bottom: 0;
+}
+.search-bar {
+  padding: 10px;
+  text-align: center;
+  position: relative;
+}
+.search-bar input {
+  border: 1px solid #e6e9ec;
+  width: 260px;
+  border-radius: 3px;
+  height: 25px;
+  padding: 5px;
+}
+.search-bar img {
+  width: 15px;
+  height: 15px;
+  background-color: #e6e9ec;
+  border-radius: 50%;
+  position: absolute;
+  right: 25px;
+  top: 15px;
+}
+.user-lists li {
+  width: 300px;
+}
+.user-lists .message {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  margin-bottom: 10px;
+  padding-right: 30px;
+  position: relative;
+}
+.user-lists .message::before {
+  content: attr(data-msg-number);
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  background-color: #2499f2;
+  color: #fff;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  line-height: 20px;
+  text-align: center;
+}
+.user-lists .inner-user-info {
+  position: relative;
+}
+.user-lists .inner-user-info::before {
+  content: attr(data-distance);
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: #8a98ab;
+}
+/* ------------------------------------------------------ */
+.articles {
+  border-left: 1px solid #e6e9ec;
 }
 /* --------------------基础布局----------------- */
 .first-nav,
@@ -53,23 +218,18 @@ body {
 }
 .first-nav,
 .second-nav,
-.user-lists,
 .articles {
   padding-bottom: 9999px;
   margin-bottom: -9999px;
 }
 .first-nav {
-  background-color: #1D2531;
+  background-color: #1d2531;
 }
 .second-nav {
-  background-color: #222C3C;
+  background-color: #222c3c;
 }
-.user-info {
-  background-color: yellow;
-}
-.user-lists {
-  background-color: green;
-}
+.user-info,
+.user-lists,
 .articles {
-  background-color: cyan;
+  background-color: #fff;
 }
