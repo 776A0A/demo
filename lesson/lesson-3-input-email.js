@@ -6,12 +6,13 @@ class InputHandler {
     this.postfixList = ['163.com', 'gmail.com', '126.com', 'qq.com', '263.net'];
     this.input = document.getElementById('email-input'),
       this.ul = document.getElementById('email-sug-wrapper');
-    this.isTyping = false;
+    this.isTyping = false,
+      this.value = '',
+      this.selectedLiIndex = 0;
     this.init()
   }
   init() {
     this.bindEvent()
-    this.handleLi()
   }
   bindEvent() {
     this.input.addEventListener('input', e => { this.inputHandler.call(this, e) })
@@ -19,12 +20,11 @@ class InputHandler {
     window.addEventListener('keyup', e => { this.escHandler.call(this, e) })
   }
   inputHandler(e) {
-    let value = this.handleInvalidateValue(e);
-    if (!value) return;
+    this.value = this.handleInvalidateValue(e);
+    if (!this.value) return;
     this.isTyping = true;
     this.ul.classList.add('active')
-    this.handleLi(value)
-    this.ul.querySelector('li').classList.add('active')
+    this.handleLi(this.value)
   }
   handleLi(value = '') {
     let html = '', _postfixList = this.postfixList;
@@ -46,6 +46,8 @@ class InputHandler {
       html += `<li>${x ? s : value}${afterAt ? '' : '@'}${item}</li>`
     })
     this.ul.innerHTML = html;
+    [...this.ul.querySelectorAll('li')][this.selectedLiIndex].classList.add('active')
+    return html;
   }
   handleInvalidateValue(e) {
     let value = e.target.value.trim().replace(/(^\s+)|(\s+$)|\s+/g, '');
@@ -63,27 +65,22 @@ class InputHandler {
       this.input.select()
     }
     if (this.isTyping) {
-      let activeLi = [...this.ul.querySelectorAll('li')].filter(li => li.classList.contains('active'))[0];
       if (e.key === 'ArrowDown') {
-        let nextLi = activeLi.nextElementSibling;
-        if (!nextLi) {
-          this.ul.firstElementChild.classList.add('active')
-        } else {
-          nextLi.classList.add('active')
+        this.selectedLiIndex++;
+        if (this.selectedLiIndex === [...this.ul.children].length) {
+          this.selectedLiIndex = 0;
         }
-        activeLi.classList.remove('active');
+        this.handleLi(this.value)
       }
       if (e.key === 'ArrowUp') {
-        let previousLi = activeLi.previousElementSibling;
-        if (!previousLi) {
-          this.ul.lastElementChild.classList.add('active')
-        } else {
-          previousLi.classList.add('active')
+        this.selectedLiIndex--;
+        if (this.selectedLiIndex < 0) {
+          this.selectedLiIndex = [...this.ul.children].length - 1;
         }
-        activeLi.classList.remove('active')
+        this.handleLi(this.value)
       }
       if (e.key === 'Enter') {
-        this.input.value = activeLi.textContent;
+        this.input.value = [...this.ul.children][this.selectedLiIndex].textContent;
         this.removeActive()
       }
     }
