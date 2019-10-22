@@ -1,0 +1,33 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+ul {
+  list-style: none;
+  border: 0.5px solid #a9a9a9;
+  border-top: none;
+  display: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+li:hover {
+  background-color: #bde0e9;
+  cursor: pointer;
+}
+
+.wrapper {
+  display: flex;
+  flex-flow: column;
+  width: 200px;
+}
+
+ul.active {
+  display: block;
+}
+
+li.active {
+  background-color: #ffeebc;
+}

@@ -139,6 +139,7 @@ body {
   overflow-x: hidden;
   height: calc(100vh - 111px);
 }
+/* 滚动条样式 */
 .user-lists ul::-webkit-scrollbar {
   width: 3px;
 }
