@@ -1,56 +1,58 @@
-window.onload = init;
-function init() {
-  xx({ selectedProduct, selectedRegion })
+window.onload = function () {
+  bindEvent()
+  a.passRequest({ selectedProduct, selectedRegion })
 }
 let regionSelect = document.getElementById('regionSelect'),
-  productSelect = document.getElementById('productSelect')
-let selectedRegion = regionSelect.value, html = '';
-let selectedProduct = productSelect.value;
-regionSelect.addEventListener('change', e => {
-  let value = e.target.value;
-  if (!value) return;
-  selectedRegion = value;
-  xx({ selectedProduct, selectedRegion })
-})
-productSelect.addEventListener('change', e => {
-  selectedProduct = e.target.value;
-  xx({ selectedProduct, selectedRegion })
-})
-let selectStrategies = {
-  selectProduct({ selectedProduct }) {
+  productSelect = document.getElementById('productSelect'),
+  selectedRegion = regionSelect.value,
+  selectedProduct = productSelect.value,
+  html = '';
 
+function selectRegion({ selectedProduct, selectedRegion }) {
+  if (!(selectedRegion && !selectedProduct)) return false;
+  sourceData.forEach(item => item.region === selectedRegion && (html = handleDOM(item)))
+  return updateDOM()
+}
+function selectProduct({ selectedProduct, selectedRegion }) {
+  if (!(selectedProduct && !selectedRegion)) return false;
+  sourceData.forEach(item => item.product === selectedProduct && (html = handleDOM(item)))
+  return updateDOM()
+}
+function bothSelect({ selectedProduct, selectedRegion }) {
+  if (!(selectedRegion && selectedProduct)) return false;
+  sourceData.forEach(item => item.region === selectedRegion && item.product === selectedProduct && (html = handleDOM(item)))
+  return updateDOM()
+}
+function nullSelect({ selectedProduct, selectedRegion }) {
+  if (!(!selectedProduct && !selectedRegion)) throw Error('搞什么飞机？什么神操作会走到这一步？')
+  sourceData.forEach(item => html = handleDOM(item))
+  return updateDOM()
+}
+class Chain {
+  constructor(fn) {
+    this.fn = fn;
+    this.nextSuccessor = null;
+  }
+  setNextSuccessor(nextSuccessor) {
+    return this.nextSuccessor = nextSuccessor;
+  }
+  passRequest() {
+    let ret = this.fn.apply(this, arguments)
+    if (ret === false) {
+      return this.nextSuccessor && this.nextSuccessor.passRequest.apply(this.nextSuccessor, arguments)
+    }
+    return ret;
   }
 }
-function xx({ selectedProduct, selectedRegion }) {
-  if (selectedRegion && selectedProduct) {
-    sourceData.forEach(item => {
-      if (item.region === selectedRegion && item.product === selectedProduct) {
-        html = handleDOM(item)
-      }
-    })
-    return updateDOM()
-  }
-  if (selectedRegion && !selectedProduct) {
-    sourceData.forEach(item => {
-      if (item.region === selectedRegion) {
-        html = handleDOM(item)
-      }
-    })
-    return updateDOM()
-  }
-  if (selectedProduct && !selectedRegion) {
-    sourceData.forEach(item => {
-      if (item.product === selectedProduct) {
-        html = handleDOM(item)
-      }
-    })
-    return updateDOM()
-  }
-}
+let a = new Chain(bothSelect),
+  b = new Chain(selectProduct),
+  c = new Chain(selectRegion),
+  n = new Chain(nullSelect);
+a.setNextSuccessor(b).setNextSuccessor(c).setNextSuccessor(n)
+
 
 function updateDOM() {
-  let tableWrapper = document.getElementById('tableWrapper')
-  tableWrapper.querySelector('tbody').innerHTML = html;
+  document.getElementById('tableWrapper').querySelector('tbody').innerHTML = html;
   return html = ''
 }
 
@@ -64,5 +66,17 @@ function handleDOM(item) {
           <td>${item.product}</td>
           ${saleHTML}
         </tr>`
-  return html
+  return html;
 }
+
+function bindEvent() {
+  regionSelect.addEventListener('change', e => {
+    selectedRegion = e.target.value;
+    a.passRequest({ selectedProduct, selectedRegion })
+  })
+  productSelect.addEventListener('change', e => {
+    selectedProduct = e.target.value;
+    a.passRequest({ selectedProduct, selectedRegion })
+  })
+}
+
