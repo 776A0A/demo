@@ -1,7 +1,24 @@
+class Chain {
+  constructor(fn) {
+    this.fn = fn;
+    this.nextSuccessor = null;
+  }
+  setNextSuccessor(nextSuccessor) {
+    return this.nextSuccessor = nextSuccessor;
+  }
+  passRequest() {
+    let ret = this.fn.apply(this, arguments)
+    if (ret === false) {
+      return this.nextSuccessor && this.nextSuccessor.passRequest.apply(this.nextSuccessor, arguments)
+    }
+    return ret;
+  }
+}
 window.onload = function () {
   bindEvent()
-  a.passRequest({ selectedProduct, selectedRegion })
+  chainBothSelect.passRequest({ selectedProduct, selectedRegion })
 }
+
 let regionSelect = document.getElementById('regionSelect'),
   productSelect = document.getElementById('productSelect'),
   selectedRegion = regionSelect.value,
@@ -23,33 +40,67 @@ function bothSelect({ selectedProduct, selectedRegion }) {
   sourceData.forEach(item => item.region === selectedRegion && item.product === selectedProduct && (html = handleDOM(item)))
   return updateDOM()
 }
-function nullSelect({ selectedProduct, selectedRegion }) {
-  if (!(!selectedProduct && !selectedRegion)) throw Error('搞什么飞机？什么神操作会走到这一步？')
+function nullSelect() {
   sourceData.forEach(item => html = handleDOM(item))
   return updateDOM()
 }
-class Chain {
-  constructor(fn) {
-    this.fn = fn;
-    this.nextSuccessor = null;
-  }
-  setNextSuccessor(nextSuccessor) {
-    return this.nextSuccessor = nextSuccessor;
-  }
-  passRequest() {
-    let ret = this.fn.apply(this, arguments)
-    if (ret === false) {
-      return this.nextSuccessor && this.nextSuccessor.passRequest.apply(this.nextSuccessor, arguments)
-    }
-    return ret;
-  }
-}
-let a = new Chain(bothSelect),
-  b = new Chain(selectProduct),
-  c = new Chain(selectRegion),
-  n = new Chain(nullSelect);
-a.setNextSuccessor(b).setNextSuccessor(c).setNextSuccessor(n)
 
+let selectForm = document.getElementById('selectForm')
+let regionList = productList = []
+selectForm.addEventListener('change', function (e) {
+  let target = e.target,
+    name = target.name;
+  if (name === 'regionSelect') {
+    regionList = handleSelectedList(this.regionSelect);
+    xx()
+  }
+  if (name === 'productSelect') {
+    productList = handleSelectedList(this.productSelect);
+    xx()
+  }
+})
+function xx() {
+  sourceData.forEach(item => {
+    if (regionList.includes(item.region) && productList.includes(item.product)) {
+      html = handleDOM(item)
+    }
+    if (regionList.includes(item.region) && !productList.includes(item.product)) {
+      html = handleDOM(item)
+    }
+    if (!regionList.includes(item.region) && productList.includes(item.product)) {
+      html = handleDOM(item)
+    }
+  })
+  return updateDOM()
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// --------------------------------------------------------------------------
+function handleSelectedList(domList) {
+  let arr = [...domList].filter(item => item.checked);
+  return arr.map(item => item.value)
+}
+let chainBothSelect = new Chain(bothSelect),
+  chainSelectProduct = new Chain(selectProduct),
+  chainSelectRegion = new Chain(selectRegion),
+  chainNullSelect = new Chain(nullSelect);
+chainBothSelect.setNextSuccessor(chainSelectProduct).setNextSuccessor(chainSelectRegion).setNextSuccessor(chainNullSelect)
 
 function updateDOM() {
   document.getElementById('tableWrapper').querySelector('tbody').innerHTML = html;
@@ -72,11 +123,11 @@ function handleDOM(item) {
 function bindEvent() {
   regionSelect.addEventListener('change', e => {
     selectedRegion = e.target.value;
-    a.passRequest({ selectedProduct, selectedRegion })
+    chainBothSelect.passRequest({ selectedProduct, selectedRegion })
   })
   productSelect.addEventListener('change', e => {
     selectedProduct = e.target.value;
-    a.passRequest({ selectedProduct, selectedRegion })
+    chainBothSelect.passRequest({ selectedProduct, selectedRegion })
   })
 }
 
