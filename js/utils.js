@@ -56,7 +56,7 @@ const utils = {
           wrapper.dataset.starIndex = index + 1; // 将用户点击的星星的编号存入包裹元素的dataset上
         } else {
           if (this.prevClickedElem.get(wrapper) === ELEM) {
-            [...wrapper.children].forEach(item => item.src = image_1 )
+            [...wrapper.children].forEach(item => item.src = image_1)
             wrapper.dataset.starIndex = '';
           } else {
             while (currentElem = currentElem.nextSibling) {
@@ -141,9 +141,9 @@ const utils = {
     }
     uploadAction(image) {
       if (this.needPlusImage && !this.hasPlusImageInstance) {
-          let ClickToPlusImage = utils.ClickToPlusImage;
-          this.plusImageInstance = new ClickToPlusImage(this.className)
-          this.hasPlusImageInstance = true;
+        let ClickToPlusImage = utils.ClickToPlusImage;
+        this.plusImageInstance = new ClickToPlusImage(this.className)
+        this.hasPlusImageInstance = true;
       }
       // let file = new File()
       // file.append('image', image)
@@ -239,6 +239,99 @@ const utils = {
       }
     }
   },
+  /**
+   * email输入框，带提示功能
+   * @param {string} dataList 提示框内容
+   * @param {dom} input 
+   * @param {dom} ul 
+   */
+  InputEmailHandler: class {
+    constructor({ dataList, input, ul }) {
+      this.dataList = dataList;
+      this.input = input,
+        this.ul = ul;
+      this.isTyping = false,
+        this.value = '', // input的value值
+        this.selectedLiIndex = 0; // 提示框中选中的项的index
+      this.bindEvent()
+    }
+    bindEvent() {
+      this.input.addEventListener('input', e => { this.inputHandler.call(this, e) })
+      window.addEventListener('click', e => { this.clickHandler.call(this, e) })
+      window.addEventListener('keyup', e => { this.keyupHandler.call(this, e) })
+    }
+    inputHandler(e) {
+      this.value = this.handleInvalidateValue(e);
+      if (!this.value) return;
+      this.isTyping = true;
+      this.ul.classList.add('active')
+      this.handleLi(this.value)
+    }
+    handleLi(value = '') {
+      let html = '', _dataList = this.dataList;
+      let afterAt = value.split('@')[1];
+      let x = false;
+      if (afterAt) {
+        let regExp = new RegExp(`^${afterAt}`);
+        if (!(_dataList.every(item => !regExp.test(item)))) { // dataList里的内容至少有一项匹配@后面的内容
+          _dataList = [];
+          this.dataList.forEach(item => {
+            if (regExp.test(item)) _dataList.push(item.replace(afterAt, ''));
+          })
+        } else {
+          x = true;
+        }
+      }
+      let s = `${value.split('@')[0]}@`;
+      _dataList.forEach(item => html += `<li>${x ? s : value}${afterAt ? '' : '@'}${item}</li>`)
+      this.ul.innerHTML = html;
+      [...this.ul.querySelectorAll('li')][this.selectedLiIndex].classList.add('active')
+    }
+    handleInvalidateValue(e) { // 校验输入值是否有效
+      let value = e.target.value.trim().replace(/(^\s+)|(\s+$)|\s+/g, '');
+      if (value === '') return this.removeActive();
+      // 注意实体字符转码
+      return value.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/&/g, '&amp;');
+    }
+    removeActive() {
+      this.ul.classList.remove('active')
+      this.isTyping = false;
+    }
+    keyupHandler(e) {
+      if (e.key === 'Escape') return this.escHandler();
+      if (!this.isTyping) return;
+      if (e.key === 'ArrowDown') return this.arrowDownHandler()
+      if (e.key === 'Enter') return this.enterHandler()
+      if (e.key === 'ArrowUp') return this.arrowUpHandler()
+    }
+    escHandler() {
+      this.removeActive()
+      this.input.select()
+    }
+    arrowDownHandler() {
+      this.selectedLiIndex++;
+      if (this.selectedLiIndex === [...this.ul.children].length) this.selectedLiIndex = 0;
+      this.handleLi(this.value)
+    }
+    arrowUpHandler() {
+      this.selectedLiIndex--;
+      if (this.selectedLiIndex < 0) this.selectedLiIndex = [...this.ul.children].length - 1;
+      this.handleLi(this.value)
+    }
+    enterHandler() {
+      this.input.value = [...this.ul.children][this.selectedLiIndex].textContent;
+      this.removeActive()
+    }
+    clickHandler(e) {
+      let target = e.target;
+      if (target === this.input) return; // 点击input自身
+      let isClickLi = [...document.querySelectorAll('#email-sug-wrapper li')].some(li => li === target);
+      // 实体字符需解码
+      isClickLi && (this.input.value = target.textContent.replace('&lt;', '<').replace('&gt;', '>').replace('&amp;', '&'));
+      this.removeActive()
+      this.input.focus()
+    }
+  }
 }
 
 export default utils
