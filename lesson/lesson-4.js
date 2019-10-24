@@ -1,109 +1,82 @@
 import utils from '../js/utils.js'
 let { Chain } = utils;
 window.onload = function () {
-  controller.triggerUpdate()
+  checkboxController.triggerUpdate() // 初始化数据
 }
-let view = {
+let checkboxView = {
   regionDOMLists: [...document.getElementsByName('regionSelect')],
-  productDOMLists: [...document.getElementsByName('productSelect')],
-  regionAllSelect: document.getElementById('regionAllSelect'),
-  productAllSelect: document.getElementById('productAllSelect')
+  productDOMLists: [...document.getElementsByName('productSelect')]
 }
-let model = {
-  regionList: ['华东'],
-  productList: [],
-  html: ''
+let checkboxModel = {
+  regionList: ['华东'], // 已选的地区
+  productList: [], // 已选的商品
+  html: '' // 将要更新的视图html
 }
 
-let controller = {
-  handleEvent(e) {
-    if (this.name === 'regionSelect') controller.handleRegion.call(this, e, this.value);
-    if (this.name === 'productSelect') controller.handleProduct.call(this, e, this.value);
-    controller.triggerUpdate()
+let checkboxController = {
+  bindEvent({ domList, callback, type = 'click' }, ...rest) { // 第1步，绑定事件
+    domList.forEach(item => item.addEventListener(type, e => callback.call(e.target, e, ...rest)))
   },
-  triggerUpdate() {
-    sourceData.forEach(item => chainSelectBoth.passRequest(item))
-    return controller.updateDOM()
+  handleCheckboxClickEvent(e) { // 第2步，根据不同name传入不同的参数
+    let name = e.target.name;
+    let regExp = new RegExp(/(.*)[A-Z]/);
+    name = regExp.exec(name)[1]; // 拿到第一个大写字母之前的单词
+    let params = {
+      value: e.target.value,
+      list_1: `${name}List`,
+      list_2: `${name === 'region' ? 'product' : 'region'}List`,
+    }
+    if (!checkboxController.checkValidate.call(e.target, e, params)) return; // 检测是否只选择了一个
+    checkboxModel[`${name}List`] = checkboxController.updateSelectedList(checkboxView[`${name}DOMLists`]); // 更新本地选择列表
+    checkboxController.triggerUpdate()
   },
-  handleRegion(e, value) {
-    if (model.regionList.length === 1 && model.regionList.includes(value) && model.productList.length === 0) {
+  checkValidate(e, { value, list_1, list_2 }) { // 第3步，检测是否能够更新列表，如果两个列表中只有一个数据，则阻止默认事件
+    if (checkboxModel[list_1].length === 1 && checkboxModel[list_1].includes(value) && checkboxModel[list_2].length === 0) {
       return e.preventDefault()
     }
-    model.regionList = controller.updateSelectedList(view.regionDOMLists);
-    view.regionAllSelect.checked = model.regionList.length === 3 ? true : false;
-    return model.regionList;
+    return true;
   },
-  handleProduct(e, value) {
-    if (model.productList.length === 1 && model.productList.includes(value) && model.regionList.length === 0) {
-      return e.preventDefault()
-    }
-    model.productList = controller.updateSelectedList(view.productDOMLists);
-    view.productAllSelect.checked = model.productList.length === 3 ? true : false;
-    return model.productList;
-  },
-  bindEvent(domLis, cb) {
-    domLis.forEach(item => {
-      item.addEventListener('click', function (e) {
-        cb.call(this, e)
-      })
-    })
-  },
-  updateSelectedList(domList) {
+  updateSelectedList(domList) { // 第4步，更新本地被选列表
     let arr = domList.filter(item => item.checked);
     return arr.map(item => item.value)
   },
-  handleDOM(item) {
-    let saleHTML = '',
-      html = model.html;
-    item.sale.forEach(s => {
-      saleHTML += `<td>${s}</td>`
-    })
-    html += `<tr>
-          <td>${item.region}</td>
-          <td>${item.product}</td>
-          ${saleHTML}
-        </tr>`
-    return model.html = html;
+  triggerUpdate() { // 第5步，根据本地列表筛选item并生成html，
+    sourceData.forEach(item => chainSelectBoth.passRequest(item)) // 内嵌了generateDOM函数
+    return checkboxController.updateDOM()
   },
-  updateDOM() {
-    document.getElementById('tableWrapper').querySelector('tbody').innerHTML = model.html;
-    return model.html = ''
+  generateDOM(item) { // 传入筛选后的item，并生成html
+    let saleHTML = '',
+      html = checkboxModel.html;
+    item.sale.forEach(s => saleHTML += `<td>${s}</td>`)
+    html += `
+      <tr>
+        <td>${item.region}</td>
+        <td>${item.product}</td>
+        ${saleHTML}
+      </tr>
+    `;
+    return checkboxModel.html = html;
+  },
+  updateDOM() { // 最后一步，更新视图
+    document.getElementById('tableWrapper').querySelector('tbody').innerHTML = checkboxModel.html;
+    return checkboxModel.html = ''; // 更新后还原checkboxModel.html
   },
 }
 // 绑定事件
-controller.bindEvent(view.regionDOMLists, controller.handleEvent)
-controller.bindEvent(view.productDOMLists, controller.handleEvent)
-controller.bindEvent([view.regionAllSelect], function (e) {
-  if (this.checked) {
-    [...document.getElementsByName('regionSelect')].forEach(item => {
-      if (!item.checked) {
-        item.click()
-      }
-    })
-  }
-})
-controller.bindEvent([view.productAllSelect], function (e) {
-  if (this.checked) {
-    e.preventDefault();
-    [...document.getElementsByName('productSelect')].forEach(item => {
-      if (!item.checked) {
-        item.click()
-      }
-    })
-  }
-})
+checkboxController.bindEvent({ domList: checkboxView.regionDOMLists, callback: checkboxController.handleCheckboxClickEvent })
+checkboxController.bindEvent({ domList: checkboxView.productDOMLists, callback: checkboxController.handleCheckboxClickEvent })
 
 let chainNodeFn = {
   bothSelect(item) {
-    if (model.regionList.includes(item.region) && model.productList.includes(item.product)) return model.html = controller.handleDOM(item);
+    if (checkboxModel.regionList.includes(item.region) && checkboxModel.productList.includes(item.product)) return checkboxModel.html = checkboxController.generateDOM(item);
     return false;
   },
   selectRegion(item) {
-    if (model.regionList.includes(item.region) && !model.productList.length) return model.html = controller.handleDOM(item);
+    if (checkboxModel.regionList.includes(item.region) && !checkboxModel.productList.length) return checkboxModel.html = checkboxController.generateDOM(item);
     return false;
   },
   selectProduct(item) {
-    if (model.productList.includes(item.product) && !model.regionList.length) return model.html = controller.handleDOM(item);
+    if (checkboxModel.productList.includes(item.product) && !checkboxModel.regionList.length) return checkboxModel.html = checkboxController.generateDOM(item);
     return false;
   }
 }
