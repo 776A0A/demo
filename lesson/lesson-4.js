@@ -6,7 +6,6 @@ let regionList = ['华东'],
 let regionAllSelect = document.getElementById('regionAllSelect'),
   productAllSelect = document.getElementById('productAllSelect');
 window.onload = function () {
-  bindEvent()
   triggerUpdate()
 }
 regionAllSelect.addEventListener('click', function (e) {
@@ -16,7 +15,7 @@ regionAllSelect.addEventListener('click', function (e) {
         item.click()
       }
     })
-  } 
+  }
 })
 productAllSelect.addEventListener('click', function (e) {
   if (this.checked) {
@@ -26,31 +25,23 @@ productAllSelect.addEventListener('click', function (e) {
         item.click()
       }
     })
-  } 
+  }
 })
 // 处理必须保留一个选择的函数
 function handleRegion(e, value) {
   if (regionList.length === 1 && regionList.includes(value) && productList.length === 0) {
     return e.preventDefault()
   }
-  regionList = updateSelectedList(this.regionSelect);
-  if (regionList.length === 3) {
-    regionAllSelect.checked = true;
-  } else {
-    regionAllSelect.checked = false;
-  }
+  regionList = updateSelectedList(regionLis);
+  regionAllSelect.checked = regionList.length === 3 ? true : false;
   return regionList;
 }
 function handleProduct(e, value) {
   if (productList.length === 1 && productList.includes(value) && regionList.length === 0) {
     return e.preventDefault()
   }
-  productList = updateSelectedList(this.productSelect);
-  if (productList.length === 3) {
-    productAllSelect.checked = true;
-  } else {
-    productAllSelect.checked = false;
-  }
+  productList = updateSelectedList(productLis);
+  productAllSelect.checked = productList.length === 3 ? true : false;
   return productList;
 }
 // 更新列表后触发更新dom
@@ -74,20 +65,28 @@ function selectProduct(item) {
   return false;
 }
 // --------------------------------------------------------------------------
-function bindEvent() {
-  let selectForm = document.getElementById('selectForm');
-  selectForm.addEventListener('click', function (e) { // click事件在change事件之前发生
-    let target = e.target, name = target.name;
-    if (name === 'regionSelect') handleRegion.call(this, e, target.value);
-    if (name === 'productSelect') handleProduct.call(this, e, target.value);
-    triggerUpdate()
+// let view = {
+//   regionLis: [...document.getElementsByName('regionSelect')]
+// }
+let regionLis = [...document.getElementsByName('regionSelect')],
+  productLis = [...document.getElementsByName('productSelect')];
+bindEvent(regionLis)
+bindEvent(productLis)
+function bindEvent(domLis) {
+  domLis.forEach(li => {
+    li.addEventListener('click', function (e) {
+      if (this.name === 'regionSelect') handleRegion.call(this, e, this.value);
+      if (this.name === 'productSelect') handleProduct.call(this, e, this.value);
+      triggerUpdate()
+    })
   })
 }
 function updateSelectedList(domList) {
-  let arr = [...domList].filter(item => item.checked);
+  let arr = domList.filter(item => item.checked);
   return arr.map(item => item.value)
 }
 
+// 最后一步
 function updateDOM() {
   document.getElementById('tableWrapper').querySelector('tbody').innerHTML = html;
   return html = ''
@@ -105,5 +104,3 @@ function handleDOM(item) {
         </tr>`
   return html;
 }
-
-
