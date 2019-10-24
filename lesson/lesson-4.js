@@ -18,7 +18,8 @@ let checkboxModel = {
   getLowercaseName(elem) {
     let regExp = new RegExp(/(.*)[A-Z]/);
     return regExp.exec(elem.name)[1];
-  }
+  },
+  loopCount: 1, // 合并行单元格时做判断用
 }
 
 let checkboxController = {
@@ -68,17 +69,42 @@ let checkboxController = {
     let saleHTML = '',
       html = checkboxModel.html;
     item.sale.forEach(s => saleHTML += `<td>${s}</td>`)
-    html += `
-      <tr>
-        <td>${item.region}</td>
-        <td>${item.product}</td>
+    function xx(l, name, one) {
+      let s = ''
+      if (checkboxModel.loopCount === 1) {
+        s = `<td rowspan=${l}>${item[name]}</td>`
+      }
+      if (one) s = `<td>${item.product}</td>`;
+      html += `
+      <tr class="tr">
+        ${s}
+        <td>${item[`${name === 'region' ? 'product' : 'region'}`]}</td>
         ${saleHTML}
       </tr>
-    `;
+      `;
+      checkboxModel.loopCount++;
+    }
+    if (checkboxModel.regionList.length === 1 && checkboxModel.productList.length > 1) {
+      let l = checkboxModel.productList.length;
+      xx(l, 'region')
+    }
+    if (checkboxModel.productList.length === 1 && checkboxModel.regionList.length > 1) {
+      let l = checkboxModel.regionList.length;
+      xx(l, 'product')
+    }
+    if (checkboxModel.regionList.length === 1 && checkboxModel.productList.length === 1) {
+      xx(0, 'product', true)
+    }
+    if (checkboxModel.regionList.length > 1 && checkboxModel.productList.length > 1) {
+      let l = checkboxModel.regionList.length;
+      if (l < checkboxModel.loopCount) checkboxModel.loopCount = 1;
+      xx(l, 'product')
+    }
     return checkboxModel.html = html;
   },
   updateDOM() { // 最后一步，更新视图
     document.getElementById('tableWrapper').querySelector('tbody').innerHTML = checkboxModel.html;
+    checkboxModel.loopCount = 1;
     return checkboxModel.html = ''; // 更新后还原checkboxModel.html
   },
 }
