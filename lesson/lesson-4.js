@@ -4,6 +4,8 @@ window.onload = function () {
   checkboxController.triggerUpdate() // 初始化数据
 }
 let checkboxView = {
+  regionCheckboxWrapper: document.getElementById('regionCheckbox'),
+  productCheckboxWrapper: document.getElementById('productCheckbox'),
   regionDOMLists: [...document.getElementsByName('regionSelect')],
   productDOMLists: [...document.getElementsByName('productSelect')]
 }
@@ -14,19 +16,20 @@ let checkboxModel = {
 }
 
 let checkboxController = {
-  bindEvent({ domList, callback, type = 'click' }, ...rest) { // 第1步，绑定事件
-    domList.forEach(item => item.addEventListener(type, e => callback.call(e.target, e, ...rest)))
+  bindEvent({ dom, callback, type = 'click' }, ...rest) { // 第1步，绑定事件
+    dom.addEventListener(type, e => callback.call(e.target, e, ...rest))
   },
   handleCheckboxClickEvent(e) { // 第2步，根据不同name传入不同的参数
-    let name = e.target.name;
-    let regExp = new RegExp(/(.*)[A-Z]/);
+    let elem = e.target;
+    if (elem.tagName.toLowerCase() !== 'input') return; // 会先点到label上
+    let name = elem.name, regExp = new RegExp(/(.*)[A-Z]/);
     name = regExp.exec(name)[1]; // 拿到第一个大写字母之前的单词
     let params = {
-      value: e.target.value,
+      value: elem.value,
       list_1: `${name}List`,
       list_2: `${name === 'region' ? 'product' : 'region'}List`,
     }
-    if (!checkboxController.checkValidate.call(e.target, e, params)) return; // 检测是否只选择了一个
+    if (!checkboxController.checkValidate.call(elem, e, params)) return; // 检测是否只选择了一个
     checkboxModel[`${name}List`] = checkboxController.updateSelectedList(checkboxView[`${name}DOMLists`]); // 更新本地选择列表
     checkboxController.triggerUpdate()
   },
@@ -36,8 +39,8 @@ let checkboxController = {
     }
     return true;
   },
-  updateSelectedList(domList) { // 第4步，更新本地被选列表
-    let arr = domList.filter(item => item.checked);
+  updateSelectedList(dom) { // 第4步，更新本地被选列表
+    let arr = dom.filter(item => item.checked);
     return arr.map(item => item.value)
   },
   triggerUpdate() { // 第5步，根据本地列表筛选item并生成html，
@@ -63,9 +66,9 @@ let checkboxController = {
   },
 }
 // 绑定事件
-checkboxController.bindEvent({ domList: checkboxView.regionDOMLists, callback: checkboxController.handleCheckboxClickEvent })
-checkboxController.bindEvent({ domList: checkboxView.productDOMLists, callback: checkboxController.handleCheckboxClickEvent })
-
+checkboxController.bindEvent({ dom: checkboxView.regionCheckboxWrapper, callback: checkboxController.handleCheckboxClickEvent })
+checkboxController.bindEvent({ dom: checkboxView.productCheckboxWrapper, callback: checkboxController.handleCheckboxClickEvent })
+// 职责链节点函数
 let chainNodeFn = {
   bothSelect(item) {
     if (checkboxModel.regionList.includes(item.region) && checkboxModel.productList.includes(item.product)) return checkboxModel.html = checkboxController.generateDOM(item);
@@ -80,6 +83,6 @@ let chainNodeFn = {
     return false;
   }
 }
-// 职责链节点函数
+// 生成职责链
 let chainSelectBoth = new Chain(chainNodeFn.bothSelect), chainSelectRegion = new Chain(chainNodeFn.selectRegion), chainSelectProduct = new Chain(chainNodeFn.selectProduct);
 chainSelectBoth.setNextSuccessor(chainSelectRegion).setNextSuccessor(chainSelectProduct)
