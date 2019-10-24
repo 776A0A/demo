@@ -69,38 +69,28 @@ let checkboxController = {
     let saleHTML = '',
       html = checkboxModel.html;
     item.sale.forEach(s => saleHTML += `<td>${s}</td>`)
-    function xx(l, name, one) {
-      let s = ''
-      if (checkboxModel.loopCount === 1) {
-        s = `<td rowspan=${l}>${item[name]}</td>`
-      }
-      if (one) s = `<td>${item.product}</td>`;
-      html += `
+    html = chainRegionListOne.passRequest({
+      regionLength: checkboxModel.regionList.length,
+      productLength: checkboxModel.productList.length,
+      html, item, saleHTML
+    })
+    return checkboxModel.html = html;
+  },
+  handleMerge(l, html, item, saleHTML, name, bothOnlyOne) {
+    let s = ''
+    if (checkboxModel.loopCount === 1) {
+      s = `<td rowspan=${l}>${item[name]}</td>`
+    }
+    if (bothOnlyOne) s = `<td>${item.product}</td>`;
+    html += `
       <tr class="tr">
         ${s}
         <td>${item[`${name === 'region' ? 'product' : 'region'}`]}</td>
         ${saleHTML}
       </tr>
       `;
-      checkboxModel.loopCount++;
-    }
-    if (checkboxModel.regionList.length === 1 && checkboxModel.productList.length > 1) {
-      let l = checkboxModel.productList.length;
-      xx(l, 'region')
-    }
-    if (checkboxModel.productList.length === 1 && checkboxModel.regionList.length > 1) {
-      let l = checkboxModel.regionList.length;
-      xx(l, 'product')
-    }
-    if (checkboxModel.regionList.length === 1 && checkboxModel.productList.length === 1) {
-      xx(0, 'product', true)
-    }
-    if (checkboxModel.regionList.length > 1 && checkboxModel.productList.length > 1) {
-      let l = checkboxModel.regionList.length;
-      if (l < checkboxModel.loopCount) checkboxModel.loopCount = 1;
-      xx(l, 'product')
-    }
-    return checkboxModel.html = html;
+    checkboxModel.loopCount++;
+    return html;
   },
   updateDOM() { // 最后一步，更新视图
     document.getElementById('tableWrapper').querySelector('tbody').innerHTML = checkboxModel.html;
@@ -114,7 +104,7 @@ checkboxController.bindEvent({ dom: checkboxView.productCheckboxWrapper, callbac
 checkboxController.bindEvent({ dom: checkboxView.regionAllSelect, callback: checkboxController.handleAllSelectClicked })
 checkboxController.bindEvent({ dom: checkboxView.productAllSelect, callback: checkboxController.handleAllSelectClicked })
 // 职责链节点函数
-let chainNodeFn = {
+let chainSelectCheckboxFn = {
   bothSelect(item) {
     if (checkboxModel.regionList.includes(item.region) && checkboxModel.productList.includes(item.product)) return checkboxModel.html = checkboxController.generateDOM(item);
     return false;
@@ -129,5 +119,40 @@ let chainNodeFn = {
   }
 }
 // 生成职责链
-let chainSelectBoth = new Chain(chainNodeFn.bothSelect), chainSelectRegion = new Chain(chainNodeFn.selectRegion), chainSelectProduct = new Chain(chainNodeFn.selectProduct);
-chainSelectBoth.setNextSuccessor(chainSelectRegion).setNextSuccessor(chainSelectProduct)
+let chainSelectBoth = new Chain(chainSelectCheckboxFn.bothSelect), chainSelectRegion = new Chain(chainSelectCheckboxFn.selectRegion), chainSelectProduct = new Chain(chainSelectCheckboxFn.selectProduct);
+chainSelectBoth.setNextSuccessor(chainSelectRegion).setNextSuccessor(chainSelectProduct);
+// 职责链节点函数
+let chainMergeTrFn = {
+  regionListOne({ regionLength, productLength, html, item, saleHTML }) {
+    if (regionLength === 1 && productLength > 1) {
+      return checkboxController.handleMerge(productLength, html, item, saleHTML, 'region')
+    }
+    return false;
+  },
+  productListOne({ regionLength, productLength, html, item, saleHTML }) {
+    if (productLength === 1 && regionLength > 1) {
+      return checkboxController.handleMerge(regionLength, html, item, saleHTML, 'product')
+    }
+    return false;
+  },
+  bothGreaterThanOne({ regionLength, productLength, html, item, saleHTML }) {
+    if (regionLength > 1 && productLength > 1) {
+      let l = regionLength;
+      if (l < checkboxModel.loopCount) checkboxModel.loopCount = 1;
+      return checkboxController.handleMerge(l, html, item, saleHTML, 'product')
+    }
+    return false;
+  },
+  bothOne({ regionLength, productLength, html, item, saleHTML }) {
+    if (regionLength === 1 && productLength === 1) {
+      return checkboxController.handleMerge(0, html, item, saleHTML, 'product', true)
+    }
+    return false;
+  }
+}
+// 生成职责链
+let chainRegionListOne = new Chain(chainMergeTrFn.regionListOne),
+  chainProductListOne = new Chain(chainMergeTrFn.productListOne),
+  chainBothGreaterThanOne = new Chain(chainMergeTrFn.bothGreaterThanOne),
+  chainBothOne = new Chain(chainMergeTrFn.bothOne);
+chainRegionListOne.setNextSuccessor(chainProductListOne).setNextSuccessor(chainBothGreaterThanOne).setNextSuccessor(chainBothOne);
