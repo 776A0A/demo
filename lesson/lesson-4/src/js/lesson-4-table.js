@@ -1,9 +1,13 @@
 let tableView = {
+  theadTr: document.getElementById('tableWrapper').querySelector('thead tr'),
   tbody: document.getElementById('tableWrapper').querySelector('tbody'),
+  changeHeadElem: document.querySelectorAll('#tableWrapper thead tr td'),
 }
 let tableModel = {
+  theadHTML: '',
   html: '', // 将要更新的视图html
   loopCount: 1, // 合并行单元格时做判断用
+  regionFirst: false,
 }
 let tableController = {
   triggerUpdate() { // 第5步，根据本地列表筛选item并生成html，
@@ -36,6 +40,10 @@ let tableController = {
     return html;
   },
   updateDOM() { // 最后一步，更新视图
+    let regionFirst = tableModel.regionFirst;
+    tableView.theadTr.children[0].textContent = regionFirst ? '地区' : '商品',
+      tableView.theadTr.children[1].textContent = regionFirst ? '商品' : '地区';
+    tableModel.regionFirst = false;
     tableView.tbody.innerHTML = tableModel.html;
     checkboxModel.loopCount = 1;
     return tableModel.html = ''; // 更新后还原checkboxModel.html
@@ -45,6 +53,7 @@ let tableController = {
 let chainMergeTrFn = {
   regionListOne({ regionLength, productLength, html, item, saleHTML }) {
     if (regionLength === 1 && productLength > 1) {
+      tableModel.regionFirst = true;
       return tableController.handleMerge(productLength, html, item, saleHTML, 'region')
     }
     return false;

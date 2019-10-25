@@ -73,6 +73,7 @@ let chainSelectCheckboxFn = {
 let chainSelectBoth = new Chain(chainSelectCheckboxFn.bothSelect),
   chainSelectRegion = new Chain(chainSelectCheckboxFn.selectRegion),
   chainSelectProduct = new Chain(chainSelectCheckboxFn.selectProduct);
+  
 chainSelectBoth
   .setNextSuccessor(chainSelectRegion)
   .setNextSuccessor(chainSelectProduct);
