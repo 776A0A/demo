@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    header {
+      background-color: #333333;
+      color: #fff;
+    }
+
+    .inner-header {
+      width: 960px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: auto;
+      height: 80px;
+      padding: 10px 0;
+    }
+
+    .header-right {
+      align-self: flex-start;
+    }
+
+    .banner {
+      background-color: #67BB32;
+      height: 200px;
+      position: relative;
+    }
+
+    .number {
+      position: absolute;
+      bottom: 10px;
+      right: calc((100vw - 960px) / 2);
+    }
+
+    .number>span {
+      background-color: rgba(255, 255, 255, .5);
+      display: inline-block;
+      height: 30px;
+      width: 30px;
+      border: 1px solid;
+      transition: height 1s;
+      text-align: center;
+      vertical-align: bottom;
+      position: relative;
+    }
+
+    .number>span.active {
+      height: 60px;
+      vertical-align: bottom;
+    }
+
+    .number>span>span {
+      display: inline-block;
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    footer {
+      background-color: #666666;
+      color: #fff;
+      /* position: absolute; */
+      /* bottom: 0; */
+      /* left: 0; */
+      width: 100%;
+    }
+
+    footer>p {
+      width: 960px;
+      text-align: center;
+      height: 100px;
+      margin: auto;
+    }
+
+    .content {
+      background-color: #fff;
+      padding-top: 20px;
+    }
+
+    .content-tab {
+      /* border-bottom: 1px solid; */
+      position: relative;
+    }
+
+    .content-tab::after {
+      content: '';
+      width: 100%;
+      height: 1px;
+      position: absolute;
+      bottom: 0;
+      background-color: #000;
+    }
+
+    .content-tab>ul {
+      display: flex;
+      width: 960px;
+      margin: auto;
+    }
+
+    .content-tab>ul>li {
+      border: 1px solid;
+      padding: 10px;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+
+    .content-tab>ul>li {
+      border-right: 0;
+    }
+
+    .content-tab>ul>li:last-of-type {
+      border-right: 1px solid;
+    }
+
+    .content-tab>ul>li.active {
+      border-bottom-color: #fff;
+      z-index: 1;
+    }
+
+    .main-content {
+      width: 960px;
+      margin: auto;
+      text-align: center;
+    }
+
+    .main-content li {
+      padding: 80px;
+      border: 1px solid;
+      flex: 1;
+      margin: 5px;
+    }
+
+    .main-content ul {
+      display: flex;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrapper">
+    <header>
+      <div class="inner-header">
+        <span class="logo">Logo</span>
+        <div class="header-right">
+          <a href="">Github</a>
+          <a href="">Register</a>
+          <a href="">Login</a>
+        </div>
+      </div>
+    </header>
+    <div class="banner">
+      <div class="number">
+        <span class="active"><span>1</span></span>
+        <span><span>2</span></span>
+        <span><span>3</span></span>
+        <span><span>4</span></span>
+      </div>
+    </div>
+    <div class="content">
+      <div class="content-tab">
+        <ul>
+          <li class="active">HOME</li>
+          <li>PROFILE</li>
+          <li>ABOUT</li>
+        </ul>
+      </div>
+      <div class="main-content">
+        <ul class="main-content-top">
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+        </ul>
+        <ul class="main-content-center">
+          <li>2</li>
+          <li>2</li>
+          <li>2</li>
+          <li>2</li>
+        </ul>
+        <ul class="main-content-bottom">
+          <li>3</li>
+          <li>3</li>
+          <li>3</li>
+        </ul>
+      </div>
+    </div>
+    <footer>
+      <p>&copy;2018 ife.baidu.com</p>
+    </footer>
+  </div>
+</body>
+
+</html>

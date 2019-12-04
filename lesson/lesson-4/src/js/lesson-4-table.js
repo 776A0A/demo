@@ -1,10 +1,8 @@
 let tableView = {
   theadTr: document.getElementById('tableWrapper').querySelector('thead tr'),
   tbody: document.getElementById('tableWrapper').querySelector('tbody'),
-  changeHeadElem: document.querySelectorAll('#tableWrapper thead tr td'),
 }
 let tableModel = {
-  theadHTML: '',
   html: '', // 将要更新的视图html
   loopCount: 1, // 合并行单元格时做判断用
   regionFirst: false,

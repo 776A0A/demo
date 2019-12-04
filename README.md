@@ -6,6 +6,7 @@
 5. [二分查找的两种写法](#二分查找的两种写法)
 6. [常用正则验证](#常用正则验证)
 7. [判断客户端](#判断客户端)
+8. [数组去重](#数组去重)
 
 [CSS&HTML相关](#CSS&HTML相关)
 1. [显示省略号](#显示省略号)
@@ -17,6 +18,7 @@
 7. [全屏背景、内容垂直居中、强制出现垂直滚动条、CSS固定页脚](#全屏背景、内容垂直居中、强制出现垂直滚动条、CSS固定页脚)
 8. [@font-face模板](#@font-face模板)
 9. [基于文件类型的链接样式](#基于文件类型的链接样式)
+10. [px2rem](#px2rem)
 
 ----------------------------------------------------------------------------------
 ### JS相关
@@ -72,14 +74,11 @@ function jsonp(url, params = {}, cb) {
         cb(data)
         document.body.removeChild(scriptEle)
     }
-    // 查询参数
-    let queryStr = '';
+    let queryStr = ''; // 查询参数
     for (let key in params) {
         queryStr += `${key}=${params[key]}&`;
     }
-
     url += `?${queryStr}callback=${cbName}`;
-
     let scriptEle = document.createElement('script');
     scriptEle.src = url;
     document.body.appendChild(scriptEle)
@@ -175,6 +174,23 @@ if (/(iPhone|iPad|iPod|iOS|Android)/i.test(navigator.userAgent)) { //移动端
     // do something...
 }
 ```
+#### 数组去重
+利用对象属性无法重复的特性：
+```javascript
+function distinct(arr1, arr2) {
+    arr1 = [...arr1, ...arr2];
+    const res = [], obj = {};
+    for(let val of arr1) {
+        if(!obj[val]) {
+            res.push(val);
+            res[val] = true;
+        }
+    }
+    return res;
+}
+
+```
+
 
 ### CSS&HTML相关
 
@@ -457,5 +473,13 @@ a[href^="mailto:"] {
 a[href$=".pdf"] {
     padding-right: 18px;
     background: url('acrobat.png') no-repeat center right;
+}
+```
+
+#### px2rem
+```SCSS
+// 转换px为rem函数，不传值默认参数为30
+@function px2rem($px: 30) {
+    @return ($px / 100) + rem;
 }
 ```

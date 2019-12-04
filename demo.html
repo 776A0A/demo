@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    ul,
+    ol {
+      list-style: none;
+    }
+    .wrapper {
+      display: flex;
+      text-align: center;
+      height: 50px;
+    }
+    .item {
+      flex: 1;
+      display: flex;
+      flex-flow: column;
+      height: 50px;
+    }
+    .ol {
+      transform: translateY(-100%);
+      transition: all .5s;
+    }
+    .item:hover .ol {
+      transform: translateY(0);
+    }
+    .item span {
+      color: #ffffff;
+      position: relative;
+      z-index: 1;
+      height: 50px;
+      display: inline-block;
+      border-bottom: 1px solid red;
+      background-color: #ddd;
+      padding: 10px 0;
+    }
+    .ol>li {
+      background-color: #ddd;
+      color: #fff;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <ul class="wrapper">
+      <li class="item">
+        <span>1</span>
+        <ol class="ol">
+          <li>2</li>
+          <li>3</li>
+          <li>4</li>
+          <li>5</li>
+        </ol>
+      </li>
+      <li class="item">
+        <span>2</span>
+        <ol class="ol">
+          <li>a</li>
+          <li>b</li>
+          <li>c</li>
+          <li>d</li>
+          <li>e</li>
+          <li>f</li>
+        </ol>
+      </li>
+    </ul>
+  </header>
+  <p>xxxx</p>
+</body>
+
+</html>

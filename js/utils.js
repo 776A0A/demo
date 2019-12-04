@@ -173,7 +173,10 @@ const utils = {
     }
     setHeadStyle() {
       let head = document.getElementsByTagName('head')[0]
-      let style = document.createElement('style')
+      let style = document.getElementById('previewImgStyle');
+      if (style) return;
+      style = document.createElement('style');
+      style.id = 'previewImgStyle';
       // 预览图的样式
       style.innerHTML = `
         #preview {position: fixed; width: 100%; height: 100%; top: 0; left: 0; background-color: #000; display: none; transition: opacity .5s ease; opacity: 0; z-index: 999;}
@@ -182,7 +185,9 @@ const utils = {
       head.appendChild(style)
     }
     addPreviewElem() {
-      let preview = document.createElement('div')
+      let preview = document.getElementById('preview');
+      if (preview) return;
+      preview = document.createElement('div');
       preview.setAttribute('id', 'preview')
       let body = document.getElementsByTagName('body')[0]
       body.appendChild(preview)
