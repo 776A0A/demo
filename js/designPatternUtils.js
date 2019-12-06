@@ -1,3 +1,4 @@
+// 设计模式封装
 const designPatternUtils = {
   /**
     * 职责链模式

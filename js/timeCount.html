@@ -104,9 +104,10 @@
     </div>
   </div>
   <script type="module">
-    import utils from './utils.js'
+    import functionalUtils from './functionalUtils.js'
     import designPatternUtils from './designPatternUtils.js';
-    const { TimeCounter } = utils;
+    import utils from './utils.js'
+    const { TimeCounter } = functionalUtils;
     {
       const inputTime = document.getElementById('inputTime'),
         result = document.getElementById('result'),
