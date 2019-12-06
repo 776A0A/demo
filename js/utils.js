@@ -337,18 +337,56 @@ const utils = {
       this.input.focus()
     }
   },
-  Chain: class {
-    constructor(fn) {
-      this.fn = fn;
+  /**
+  * 倒计时
+  * @param {number} time 倒计时时间
+  * @param {dom} resultDom 展示倒计时的dom元素
+  * @param {string} timeType 倒计时类型
+  * @returns object
+  */
+  TimeCounter: class {
+    constructor(time, resultDom, timeType) {
+      this.time = time; // 倒计时时间
+      this.resultDom = resultDom; // 展示倒计时的dom元素
+      this.timeType = timeType; // 倒计时类型
+      this.intervalId = null;
+      this.typeObj = {
+        '小时': 60 * 1000 * 60,
+        '分': 60 * 1000,
+        '秒': 1000
+      };
+      this.init()
     }
-    setNextSuccessor(nextSuccessor) {
-      return this.nextSuccessor = nextSuccessor;
+    init() {
+      this.time = this.time < 0 ? 0 : this.time;
+      this.time = this.typeObj[this.timeType] * this.time; // 根据不同的计时类型计算时间
+      this.setTimeCount()
     }
-    passRequest() {
-      let ret = this.fn.apply(this, arguments)
-      if (ret === false) return this.nextSuccessor && this.nextSuccessor.passRequest.apply(this.nextSuccessor, arguments);
-      return ret;
+    setTimeCount() {
+      if (this.intervalId) clearInterval(this.intervalId); // 清除上一个倒计时
+      this.run(this.time) // 开始倒计时
+      this.intervalId = setInterval(() => this.run(), 1000);
     }
+    run() {
+      result.textContent = this.formatTime(); // 更新页面倒计时
+      if (this.time === 0) return clearInterval(this.intervalId)
+      this.time -= 1000;
+    }
+    formatTime() {
+      let hours = Math.trunc(this.time / 1000 / 60 / 60),
+        _min = Math.trunc(this.time / 1000 / 60),
+        min = _min >= 60 ? (_min % 60) : (_min),
+        sec = (this.time / 1000) % 60;
+      hours = this.add0(hours), min = this.add0(min), sec = this.add0(sec);
+      return `${hours}:${min}:${sec}`;
+    }
+    add0(t) {
+      return t < 10 ? `0${t}` : t;
+    }
+  },
+  addEvent(dom, fn, type = 'click') {
+    dom.addEventListener(type, e => fn.call(e.target, e))
+    return this;
   }
 }
 

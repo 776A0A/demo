@@ -63,7 +63,7 @@
 
     .countTime {
       color: red;
-      animation: xx .5s infinite alternate;
+      /* animation: role .5s infinite alternate; */
       display: inline-block;
     }
 
@@ -75,7 +75,7 @@
       margin-bottom: -25px;
     }
 
-    @keyframes xx {
+    @keyframes role {
       0% {
         transform: translateX(2px)
       }
@@ -95,7 +95,7 @@
         <input type="number" id="inputTime" placeholder="0">
       </div>
       <select name="countType" id="countType">
-        <option value="" selected disabled>选择时间类型</option>
+        <option value="小时" selected>小时</option>
         <option value="分">分</option>
         <option value="秒">秒</option>
       </select>
@@ -103,119 +103,28 @@
       <div id="result"></div>
     </div>
   </div>
-  <script>
-    let inputTime = document.getElementById('inputTime'),
-      result = document.getElementById('result'),
-      startButton = document.getElementById('startButton');
-    let minutes = 0;
-    let type = '分';
-    let intervalId = null;
-    inputTime.addEventListener('input', e => {
-      minutes = Number(e.target.value)
-    })
-    startButton.addEventListener('click', e => {
-      // setTimeCount(minutes)
-      // timeCounter.init(minutes)
-      // new TimeCounter(minutes)
-      xx(minutes)
-    })
-    countType.addEventListener('change', e => {
-      type = e.target.value;
-    })
-    // function setTimeCount(time, delay = 0) {
-    //   if (intervalId) clearInterval(intervalId);
-    //   delay *= 1000;
-    //   if (delay !== 0) {
-    //     result.innerHTML = '将在 <span class="countTime">5</span> 秒钟之后开始倒计时'
-    //     i = setInterval(() => {
-    //       result.getElementsByClassName('countTime')[0].textContent = `${(delay - 1000) / 1000}`
-    //       delay -= 1000;
-    //       if (delay === 0) clearInterval(i)
-    //     }, 1000);
-    //   }
-    //   if (type === '分') {
-    //     time = time * 60 * 1000;
-    //   } else {
-    //     time = time * 1000;
-    //   }
-    //   setTimeout(() => {
-    //     intervalId = setInterval(() => {
-    //       result.textContent = formatTime(time);
-    //       time -= 1000;
-    //       if (time === -1000) clearInterval(intervalId)
-    //     }, 1000);
-    //   }, delay);
-    // }
-    const getSingle = function (fn) {
-      let instance = null;
-      return function (...rest) {
-        return instance || (instance = new fn(...rest))
-      }
+  <script type="module">
+    import utils from './utils.js'
+    import designPatternUtils from './designPatternUtils.js';
+    const { TimeCounter } = utils;
+    {
+      const inputTime = document.getElementById('inputTime'),
+        result = document.getElementById('result'),
+        startButton = document.getElementById('startButton');
+      let minutes = 0, timeCounterInstance = null, timeType = '小时'; // 初始值
+      utils.addEvent(inputTime, e => minutes = Number(e.target.value), 'input')
+        .addEvent(startButton, e => {
+          if (timeCounterInstance) {
+            timeCounterInstance.time = minutes;
+            timeCounterInstance.timeType = timeType;
+            timeCounterInstance.init()
+          } else {
+            timeCounterInstance = timeCounterSingle(minutes, result, timeType)
+          }
+        })
+        .addEvent(countType, e => timeType = e.target.value, 'change');
+      let timeCounterSingle = designPatternUtils.getSingle(TimeCounter)
     }
-    class TimeCounter {
-      constructor(time) {
-        this.time = time;
-        this.intervalId = null;
-        this.typeObj = {
-          '分': 60 * 1000,
-          '秒': 1000
-        };
-        this.init()
-      }
-      init() {
-        this.setTimeCount()
-      }
-      setTimeCount() {
-        if (this.intervalId) clearInterval(this.intervalId);
-        this.time = this.typeObj[type] * this.time;
-        this.run(this.time)
-        this.intervalId = setInterval(() => this.run(), 1000);
-      }
-      formatTime() {
-        let min = Math.trunc(this.time / 1000 / 60);
-        let sec = (this.time / 1000) % 60;
-        if (min < 10) min = `0${min}`;
-        if (sec < 10) sec = `0${sec}`;
-        return `${min}:${sec}`;
-      }
-      run() {
-        result.textContent = this.formatTime();
-        this.time -= 1000;
-        if (this.time === -1000) clearInterval(this.intervalId)
-      }
-    }
-    let xx = getSingle(TimeCounter)
-
-    // const timeCounter = {
-    //   typeObj: {
-    //     '分': 60 * 1000,
-    //     '秒': 1000
-    //   },
-    //   intervalId: null,
-    //   time: 0,
-    //   init(time) {
-    //     this.time = time;
-    //     this.setTimeCount()
-    //   },
-    //   setTimeCount() {
-    //     if (this.intervalId) clearInterval(this.intervalId);
-    //     this.time = this.typeObj[type] * this.time;
-    //     this.run(this.time)
-    //     this.intervalId = setInterval(() => this.run(), 1000);
-    //   },
-    //   formatTime() {
-    //     let min = Math.trunc(this.time / 1000 / 60);
-    //     let sec = (this.time / 1000) % 60;
-    //     if (min < 10) min = `0${min}`;
-    //     if (sec < 10) sec = `0${sec}`;
-    //     return `${min}:${sec}`;
-    //   },
-    //   run() {
-    //     result.textContent = this.formatTime();
-    //     this.time -= 1000;
-    //     if (this.time === -1000) clearInterval(this.intervalId)
-    //   }
-    // }
   </script>
 </body>
 
