@@ -1,13 +1,27 @@
-* {
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
+body,
+html {
+  height: 100%;
+}
 input,
-button {
+button,
+option,
+select {
   outline: none;
   background: transparent;
   border: none;
+  width: auto;
+  color: inherit;
+}
+/* 去除小箭头 */
+::-webkit-inner-spin-button {
+  -webkit-appearance: none;
 }
 textarea {
   resize: none;

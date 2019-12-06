@@ -116,7 +116,6 @@ function binarySearch_2(arr, value, high, low = 0) {
 	} else {
 		return -1;
 	}
-
 }
 ```
 

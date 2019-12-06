@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="../css/common.css">
+  <style>
+    #wrapper {
+      height: 100%;
+      position: relative;
+      background-color: rgba(0, 0, 0, .5);
+    }
+
+    .inner-wrapper {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 50px;
+      border: 1px solid #fff;
+      border-radius: 5px;
+      color: #fff;
+      min-width: 400px;
+      display: flex;
+      flex-flow: column;
+      justify-content: space-between;
+    }
+
+    .input-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #inputTime {
+      background-color: #fff;
+      padding: 10px;
+      border-radius: 2px;
+      color: #000;
+    }
+
+    #countType {
+      padding: 10px;
+      background-color: #fff;
+      color: #000;
+      margin: 10px 0;
+      border-radius: 2px;
+    }
+
+    #startButton {
+      display: block;
+      text-align: center;
+      background-color: #fff;
+      padding: 10px;
+      color: #000;
+      border-radius: 2px;
+    }
+
+    #startButton:active {}
+
+    .countTime {
+      color: red;
+      animation: xx .5s infinite alternate;
+      display: inline-block;
+    }
+
+    #result {
+      color: #fff;
+      text-align: center;
+      margin: auto;
+      margin-top: 10px;
+      margin-bottom: -25px;
+    }
+
+    @keyframes xx {
+      0% {
+        transform: translateX(2px)
+      }
+
+      100% {
+        transform: translateX(-2px)
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="wrapper">
+    <div class="inner-wrapper">
+      <div class="input-wrapper">
+        <label for="inputTime">请输入时间：</label>
+        <input type="number" id="inputTime" placeholder="0">
+      </div>
+      <select name="countType" id="countType">
+        <option value="" selected disabled>选择时间类型</option>
+        <option value="分">分</option>
+        <option value="秒">秒</option>
+      </select>
+      <button id="startButton">开始</button>
+      <div id="result"></div>
+    </div>
+  </div>
+  <script>
+    let inputTime = document.getElementById('inputTime'),
+      result = document.getElementById('result'),
+      startButton = document.getElementById('startButton');
+    let minutes = 0;
+    let type = '分';
+    let intervalId = null;
+    inputTime.addEventListener('input', e => {
+      minutes = Number(e.target.value)
+    })
+    startButton.addEventListener('click', e => {
+      // setTimeCount(minutes)
+      // timeCounter.init(minutes)
+      // new TimeCounter(minutes)
+      xx(minutes)
+    })
+    countType.addEventListener('change', e => {
+      type = e.target.value;
+    })
+    // function setTimeCount(time, delay = 0) {
+    //   if (intervalId) clearInterval(intervalId);
+    //   delay *= 1000;
+    //   if (delay !== 0) {
+    //     result.innerHTML = '将在 <span class="countTime">5</span> 秒钟之后开始倒计时'
+    //     i = setInterval(() => {
+    //       result.getElementsByClassName('countTime')[0].textContent = `${(delay - 1000) / 1000}`
+    //       delay -= 1000;
+    //       if (delay === 0) clearInterval(i)
+    //     }, 1000);
+    //   }
+    //   if (type === '分') {
+    //     time = time * 60 * 1000;
+    //   } else {
+    //     time = time * 1000;
+    //   }
+    //   setTimeout(() => {
+    //     intervalId = setInterval(() => {
+    //       result.textContent = formatTime(time);
+    //       time -= 1000;
+    //       if (time === -1000) clearInterval(intervalId)
+    //     }, 1000);
+    //   }, delay);
+    // }
+    const getSingle = function (fn) {
+      let instance = null;
+      return function (...rest) {
+        return instance || (instance = new fn(...rest))
+      }
+    }
+    class TimeCounter {
+      constructor(time) {
+        this.time = time;
+        this.intervalId = null;
+        this.typeObj = {
+          '分': 60 * 1000,
+          '秒': 1000
+        };
+        this.init()
+      }
+      init() {
+        this.setTimeCount()
+      }
+      setTimeCount() {
+        if (this.intervalId) clearInterval(this.intervalId);
+        this.time = this.typeObj[type] * this.time;
+        this.run(this.time)
+        this.intervalId = setInterval(() => this.run(), 1000);
+      }
+      formatTime() {
+        let min = Math.trunc(this.time / 1000 / 60);
+        let sec = (this.time / 1000) % 60;
+        if (min < 10) min = `0${min}`;
+        if (sec < 10) sec = `0${sec}`;
+        return `${min}:${sec}`;
+      }
+      run() {
+        result.textContent = this.formatTime();
+        this.time -= 1000;
+        if (this.time === -1000) clearInterval(this.intervalId)
+      }
+    }
+    let xx = getSingle(TimeCounter)
+
+    // const timeCounter = {
+    //   typeObj: {
+    //     '分': 60 * 1000,
+    //     '秒': 1000
+    //   },
+    //   intervalId: null,
+    //   time: 0,
+    //   init(time) {
+    //     this.time = time;
+    //     this.setTimeCount()
+    //   },
+    //   setTimeCount() {
+    //     if (this.intervalId) clearInterval(this.intervalId);
+    //     this.time = this.typeObj[type] * this.time;
+    //     this.run(this.time)
+    //     this.intervalId = setInterval(() => this.run(), 1000);
+    //   },
+    //   formatTime() {
+    //     let min = Math.trunc(this.time / 1000 / 60);
+    //     let sec = (this.time / 1000) % 60;
+    //     if (min < 10) min = `0${min}`;
+    //     if (sec < 10) sec = `0${sec}`;
+    //     return `${min}:${sec}`;
+    //   },
+    //   run() {
+    //     result.textContent = this.formatTime();
+    //     this.time -= 1000;
+    //     if (this.time === -1000) clearInterval(this.intervalId)
+    //   }
+    // }
+  </script>
+</body>
+
+</html>
