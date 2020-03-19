@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>XSS 攻击</title>
+    <style>
+      #demo {
+        border: 1px solid;
+        height: 300px;
+      }
+    </style>
+  </head>
+  <body>
+    <input type="text" id="input" />
+
+    <div id="demo"></div>
+    <!-- <img src="" id="img" alt="" /> -->
+
+    <script>
+      input.onchange = e => {
+        // demo.innerHTML = e.target.value;
+        demo.textContent = xx.replace('__', e.target.value)
+      }
+      let xx = `<img src="__" >`
+      // new Image().src=document.cookie
+
+      // let xx = `<img src="x" onerror="new Image().src=document.cookie">`
+    </script>
+  </body>
+</html>

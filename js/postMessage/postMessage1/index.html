@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>a</title>
+  </head>
+  <body>
+    <button id="post">发送消息给b</button>
+    <script>
+      let b
+      post.onclick = e => {
+        b = window.open('http://192.168.0.104:5501')
+        console.log(b);
+        post.onclick = event => {
+          b.postMessage('你好 b', '*')
+        }
+      }
+
+      window.onmessage = e => {
+        if (e.source === b) {
+          console.log(e.data)
+        }
+      }
+    </script>
+  </body>
+</html>

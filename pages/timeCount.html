@@ -104,26 +104,29 @@
     </div>
   </div>
   <script type="module">
-    import functionalUtils from './functionalUtils.js'
-    import designPatternUtils from './designPatternUtils.js';
-    import utils from './utils.js'
+    import functionalUtils from '../js/functionalUtils.js'
+    import designPatternUtils from '../js/designPatternUtils.js';
+    import utils from '../js/utils.js'
     const { TimeCounter } = functionalUtils;
     {
       const inputTime = document.getElementById('inputTime'),
         result = document.getElementById('result'),
         startButton = document.getElementById('startButton');
       let minutes = 0, timeCounterInstance = null, timeType = '小时'; // 初始值
-      utils.addEvent(inputTime, e => minutes = Number(e.target.value), 'input')
-        .addEvent(startButton, e => {
-          if (timeCounterInstance) {
-            timeCounterInstance.time = minutes;
-            timeCounterInstance.timeType = timeType;
-            timeCounterInstance.init()
-          } else {
-            timeCounterInstance = timeCounterSingle(minutes, result, timeType)
-          }
-        })
-        .addEvent(countType, e => timeType = e.target.value, 'change');
+      function start() {
+        if (timeCounterInstance) {
+          timeCounterInstance.time = minutes;
+          timeCounterInstance.timeType = timeType;
+          timeCounterInstance.init()
+        } else {
+          timeCounterInstance = timeCounterSingle(minutes, result, timeType)
+        }
+      }
+      utils
+        .addEvent(inputTime, e => minutes = Number(e.target.value), 'input')
+        .addEvent(startButton, start)
+        .addEvent(countType, e => timeType = e.target.value, 'change')
+        .addEvent(window, e => e.key.toLowerCase() === 'enter' && start(), 'keyup')
       let timeCounterSingle = designPatternUtils.getSingle(TimeCounter)
     }
   </script>

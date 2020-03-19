@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="slide-wrapper">
+        <div>1</div>
+        <div>2</div>
+        <div>3</div>
+      </div>
+      <div class="dots">
+        <i class="dot active"></i>
+        <i class="dot"></i>
+        <i class="dot"></i>
+      </div>
+    </div>
+    <button id="next-btn">下一张</button>
+    <script>
+      const nextBtn = document.getElementById('next-btn')
+      const slideWrapper = document.querySelector('.slide-wrapper')
+      const dots = [...document.getElementsByClassName('dot')]
+      let activeIndex = 0
+      let dotActiveIndex = 0
+      let canClick = true
+      let sX, eX
+
+      addToSlideWrapper()
+
+      slideWrapper.ontouchstart = e => {
+        sX = e.touches[0].pageX
+      }
+      slideWrapper.ontouchend = e => {
+        eX = e.changedTouches[0].pageX
+        if (eX - sX < -50) {
+          nextBtn.click()
+        }
+      }
+
+      function changeDotClass() {
+        dots.forEach(dot => dot.classList.remove('active'))
+        dots[++dotActiveIndex % dots.length].classList.add('active')
+      }
+
+      nextBtn.onclick = e => {
+        if (!canClick) return
+
+        canClick = false
+
+        slideWrapper.style.transform = `translateX(${-200 *
+          (++activeIndex % slideWrapper.children.length)}px)`
+
+        changeDotClass()
+      }
+
+      function createFirst() {
+        const div4 = document.createElement('div')
+        div4.textContent = 1
+        return div4
+      }
+
+      function addToSlideWrapper() {
+        slideWrapper.appendChild(createFirst())
+      }
+
+      slideWrapper.ontransitionend = e => {
+        canClick = true
+
+        const len = slideWrapper.children.length
+
+        if (activeIndex % len === len - 1) {
+          slideWrapper.style.transition = 'none'
+          slideWrapper.style.transform = `translateX(0px)`
+          activeIndex++
+          setTimeout(() => {
+            slideWrapper.style.transition = 'all .3s'
+          })
+        }
+      }
+    </script>
+  </body>
+</html>

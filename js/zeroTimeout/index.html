@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>setZeroTimeout</title>
+  </head>
+  <body>
+    <button id="post">发送消息</button>
+
+    <script>
+      ;(function() {
+        const msg = 'zero timeout'
+        let cb
+
+        function setZeroTimeout(fn) {
+          cb = fn
+          window.postMessage(msg, window.origin)
+        }
+
+        function handleMessage({ source, data, origin }) {
+          if (source === window && data === msg && origin === window.origin)
+            cb()
+        }
+
+        window.addEventListener('message', handleMessage, true)
+
+        window.setZeroTimeout = setZeroTimeout
+      })()
+
+      let i, startTime
+
+      document.getElementById('post').onclick = e => {
+        i = 0
+        startTime = Date.now()
+        setZeroTimeout(test1)
+      }
+
+      function test1() {
+        if (++i === 100) {
+          let endTime = Date.now()
+
+          console.log(`zero = ${endTime - startTime}`)
+
+          i = 0
+          startTime = Date.now()
+
+          setTimeout(test2, 0)
+        } else {
+          setZeroTimeout(test1)
+        }
+      }
+
+      function test2() {
+        if (++i === 100) {
+          let endTime = Date.now()
+
+          console.log(`original = ${endTime - startTime}`)
+        } else {
+          setTimeout(test2, 0)
+        }
+      }
+    </script>
+  </body>
+</html>

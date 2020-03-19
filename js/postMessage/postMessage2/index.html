@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>b</title>
+</head>
+<body>
+  <button id="post">发送消息给a</button>
+  <script>
+    let a = null;
+    let aOrigin = null;
+
+    post.onclick = e=> {
+      a.postMessage('你好 a', aOrigin)
+    }
+
+    window.onmessage = e => {
+      console.log(e.data);
+      a = e.source;
+      aOrigin = e.origin
+    }
+  </script>
+</body>
+</html>

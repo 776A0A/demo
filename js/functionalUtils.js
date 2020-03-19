@@ -164,6 +164,9 @@ const functionalUtils = {
   ClickToPlusImage: class {
     constructor(wrapperClassName) {
       this.wrapperClassName = wrapperClassName;
+      this.init()
+    }
+    init() {
       this.setHeadStyle()
       this.addPreviewElem()
       this.clickEvent()
@@ -244,7 +247,7 @@ const functionalUtils = {
   },
   /**
    * email输入框，带提示功能
-   * @param {string} dataList 提示框内容
+   * @param {array} dataList 提示框内容
    * @param {dom} input 
    * @param {dom} ul 
    */
