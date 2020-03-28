@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    .wrapper {
+      border: 10px solid darkorchid;
+      width: 200px;
+      height: 200px;
+      margin: auto;
+      font-size: 30px;
+      color: #fff;
+      line-height: 200px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .inner-box {
+      display: flex;
+      height: 100%;
+      transition: 1s;
+    }
+
+    .img {
+      flex: 1 0 100%;
+      height: 100%;
+    }
+
+    .img.active {
+      /* color: black; */
+    }
+  </style>
+  <title>carousel</title>
+</head>
+
+<body>
+  <div class="wrapper">
+    <div class="inner-box">
+      <span class="img" style="background-color: lightblue;">1</span>
+      <span class="img" style="background-color: lightcoral;">2</span>
+      <span class="img" style="background-color: lightgreen;">3</span>
+    </div>
+  </div>
+  <button id="pre">上一张</button>
+  <button id="next">下一张</button>
+
+  <script>
+    const box = document.querySelector(".inner-box");
+
+    let canClick = true;
+
+    let preClicked = false;
+    let nextClicked = false;
+
+    pre.onclick = e => {
+      handlePre()
+    }
+
+    next.onclick = e => {
+      handleNext()
+    }
+
+    box.ontransitionend = (e) => {
+      cancelTransition();
+      if (preClicked) {
+        changeLastToFirst()
+        preClicked = false;
+      } else {
+        changFirstToLast();
+        nextClicked = false;
+      }
+      backInitialPosition();
+      addTransition()
+      changeActive()
+
+    };
+
+    function handleNext() {
+      judgeCanClick()
+      nextClicked = true;
+      box.style.transform = `translate3d(-400px, 0, 0)`;
+    }
+
+    function handlePre() {
+      judgeCanClick()
+      preClicked = true;
+      box.style.transform = `translate3d(0, 0, 0)`;
+    }
+
+    function judgeCanClick() {
+      if (!canClick) return;
+      canClick = false;
+    }
+
+    function cancelTransition() {
+      box.style.transition = "none"
+    }
+
+    function changFirstToLast() {
+      box.appendChild(document.getElementsByClassName("img")[0])
+    }
+
+    function changeLastToFirst() {
+      box.prepend(document.getElementsByClassName("img")[2])
+    }
+
+    function backInitialPosition() {
+      box.style.transform = `translate3d(-200px, 0, 0)`;
+    }
+
+    function addTransition() {
+      setTimeout(() => {
+        box.style.transition = "1s"
+        canClick = true;
+      });
+    }
+
+    function changeActive() {
+      const imgs = [...document.getElementsByClassName("img")];
+      imgs.forEach(img => img.classList.remove('active'));
+      imgs[1].classList.add('active')
+    }
+
+    init()
+
+    function init() {
+      cancelTransition();
+      changeLastToFirst()
+      box.style.transform = `translate3d(-200px, 0, 0)`;
+      document.getElementsByClassName("img")[1].classList.add('active')
+      addTransition()
+    }
+
+    setInterval(() => {
+      next.click()
+    }, 1000)
+
+  </script>
+</body>
+
+</html>
