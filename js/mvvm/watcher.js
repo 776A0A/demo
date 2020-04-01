@@ -1,4 +1,5 @@
 import Dep from './dep.js';
+import { getVal } from './utils.js';
 
 export default class Watcher {
   constructor (vm, exp, fn) {
@@ -8,14 +9,11 @@ export default class Watcher {
 
     Dep.target = this;
 
-    const arr = exp.split('.');
-    let val;
-
     /**
      * 这里是为了唤起数据 get 方法
      * get 方法内会进行依赖收集
      */
-    arr.forEach(key => val = vm[key.trim()]);
+    getVal(exp, vm);
 
     Dep.target = null;
   }
@@ -27,12 +25,10 @@ export default class Watcher {
   update () {
     /**
      * 实际上所有的以下三行都是为了唤起 get，然后进行依赖收集
-     * // FIXME 那么这里的问题就是可能存在重复收集
+     * 但是唤起依赖收集是有条件的，那就是必须有Dep.target
+     * 而Dep.target只会在调用new Watcher时才会有值
      */
-    const arr = this.exp.split('.');
-    let val;
-
-    arr.forEach(key => val = this.vm[key.trim()]);
+    const val = getVal(this.exp, this.vm);
 
     this.fn(val);
   }

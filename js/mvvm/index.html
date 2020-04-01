@@ -9,11 +9,45 @@
 
 <body>
   <div id="app">
-    {{ c }}
+    <input type="text" v-model="a.b">
+    <br>
+    <input type="text" v-model="c">
+    <br>
+    {{ a.b }}
+    <br>
+    {{c}}
+    <br>
+    getAC: {{getAC}}xxxxxx{{c}}
   </div>
   <button id="btn">点我</button>
 
-  <script src="./index.js" type="module"></script>
+  <script type="module">
+    import Mvvm from './mvvm.js';
+
+    const vm = new Mvvm({
+      el: '#app',
+      data: {
+        a: {
+          b: 1
+        },
+        c: 2
+      },
+      computed: {
+        getAC() {
+          return this.a.b + this.c;
+        }
+      },
+      mounted() {
+        console.log(`mounted`);
+      }
+    });
+
+    document.getElementById('btn').addEventListener('click', e => {
+      vm.c = Math.random();
+    });
+
+    console.log(vm);
+  </script>
 </body>
 
 </html>

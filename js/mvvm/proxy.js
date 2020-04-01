@@ -1,4 +1,4 @@
-import { baseConfig } from './shared.js';
+import { sharedPropertyDefinition } from './shared.js';
 
 /**
  * 做一层代理，使得可以直接通过this.xx访问属性
@@ -6,16 +6,13 @@ import { baseConfig } from './shared.js';
  * @param {Object} data
  * @param {Mvvm} vm
  */
-export function dataProxy (data, vm) {
-  Object.entries(data).forEach(([key, val]) => {
-    Object.defineProperty(vm, key, {
-      ...baseConfig,
-      get () {
-        return vm._data[key];
-      },
-      set (newVal) {
-        vm._data[key] = newVal;
-      }
+export function proxy (data, key, vm) {
+  Object.entries(data).forEach(([_key, val]) => {
+
+    Object.defineProperty(vm, _key, {
+      ...sharedPropertyDefinition,
+      get: () => vm[key][_key],
+      set: newVal => vm[key][_key] = newVal
     });
   });
 }

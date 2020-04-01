@@ -1,4 +1,4 @@
-export const baseConfig = {
+export const sharedPropertyDefinition = {
   enumerable: true,
   configurable: true
 };
