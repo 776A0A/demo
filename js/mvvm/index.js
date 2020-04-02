@@ -1,4 +1,4 @@
 
-const a = function () {
-  console.log('object');
-}();
+import Mvvm from './mvvm.js';
+
+export default Mvvm;

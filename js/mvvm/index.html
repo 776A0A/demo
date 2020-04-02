@@ -17,14 +17,13 @@
     <br>
     c: {{c}}
     <br>
-    getAC: {{getAC}}xxxxxx-----{{a.b}}
+    getAC: {{getAC}} ----- b: {{a.b}}
     <br>
-    c: {{c}}
   </div>
   <button id="btn">点我</button>
 
   <script type="module">
-    import Mvvm from './mvvm.js';
+    import Mvvm from './index.js';
 
     const vm = new Mvvm({
       el: '#app',
@@ -37,7 +36,6 @@
       computed: {
         getAC() {
           console.log('computed');
-          // debugger
           return this.a.b + this.c;
         }
       },

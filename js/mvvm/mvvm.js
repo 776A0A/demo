@@ -16,4 +16,3 @@ export default function Mvvm (options = {}) {
 
   initLiftCircle(this);
 }
-
