@@ -13,11 +13,13 @@
     <br>
     <input type="text" v-model="c">
     <br>
-    {{ a.b }}
+    b: {{ a.b }}
     <br>
-    {{c}}
+    c: {{c}}
     <br>
-    getAC: {{getAC}}xxxxxx{{c}}
+    getAC: {{getAC}}xxxxxx-----{{a.b}}
+    <br>
+    c: {{c}}
   </div>
   <button id="btn">点我</button>
 
@@ -34,6 +36,8 @@
       },
       computed: {
         getAC() {
+          console.log('computed');
+          // debugger
           return this.a.b + this.c;
         }
       },

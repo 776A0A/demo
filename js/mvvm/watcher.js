@@ -23,13 +23,6 @@ export default class Watcher {
    * @memberof Watcher
    */
   update () {
-    /**
-     * 实际上所有的以下三行都是为了唤起 get，然后进行依赖收集
-     * 但是唤起依赖收集是有条件的，那就是必须有Dep.target
-     * 而Dep.target只会在调用new Watcher时才会有值
-     */
-    const val = getVal(this.exp, this.vm);
-
-    this.fn(val);
+    this.fn();
   }
 }

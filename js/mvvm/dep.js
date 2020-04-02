@@ -6,10 +6,10 @@
  */
 export default class Dep {
   constructor () {
-    this.subs = [];
+    this.subs = new Set()
   }
   addSub (sub) {
-    this.subs.push(sub);
+    this.subs.add(sub);
   }
   notify () {
     this.subs.forEach(sub => sub.update());

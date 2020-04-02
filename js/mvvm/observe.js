@@ -10,14 +10,15 @@ import Dep from './dep.js';
 class Observe {
   constructor (data) {
     this.data = data;
-    this.dep = new Dep(); // 每一个对象都有一个依赖池
 
-    Object.entries(data).forEach(([key, val]) => {
+    /**
+     * 每一个对象都有一个依赖池
+     * 只要对象中的一个属性发生变化
+     * 那么就会通知所有watcher
+     */
+    this.dep = new Dep();
 
-      observe(val);
-      defineReactive(key, val, this);
-
-    });
+    Object.entries(data).forEach(([key, val]) => defineReactive(key, val, this));
   }
 }
 
@@ -28,6 +29,8 @@ export default function observe (data) {
 
 
 function defineReactive (key, val, { data, dep }) {
+  observe(val); // 递归，如果值也是对象的话
+
   Object.defineProperty(data, key, {
     ...sharedPropertyDefinition,
     get () {

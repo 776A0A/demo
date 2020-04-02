@@ -7,11 +7,15 @@
  * @returns *
  */
 export function getVal (exp, vm) {
-  const keyArr = exp.split('.').map(key => key.trim());
-
-  let val = vm;
-
-  return keyArr.reduce((val, key) => val = val[key], val);
+  return exp
+    .split('.')
+    .map(
+      key => key.trim()
+    )
+    .reduce(
+      (val, key) => val = val[key]
+      , vm
+    );
 }
 
 /**
