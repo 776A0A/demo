@@ -2,18 +2,26 @@ const PENDING = 'pending';
 const RESOLVED = 'resolved';
 const REJECTED = 'rejected';
 
+let pId = 0;
+
 class P {
   constructor (executor) {
     this.status = PENDING;
     this.value = this.reason = undefined;
     this.onFullFilledArray = [];
     this.onRejectedArray = [];
+    this.pId = pId++;
+    // debugger
 
     const resolve = value => {
       if (this.status === PENDING) {
         this.status = RESOLVED;
         this.value = value;
         this.onFullFilledArray.forEach(fn => fn(this.value));
+        console.log({
+          pId: this.pId,
+          onFullFilledArray: this.onFullFilledArray
+        });
       }
     };
 
@@ -33,25 +41,47 @@ class P {
   }
 
   then (onFullFilled, onRejected) {
+    /**
+     * 要注意下面执行的代码中this的指向，实际上是指向上一个promise
+     */
 
     // 处理非函数的情况，直接将值返回，也就是值穿透
-    typeof onFullFilled !== 'function' ? (onFullFilled = value => value) : null;
-    typeof onRejected !== 'function' ? (onRejected = err => err) : null;
+    if (typeof onFullFilled !== 'function') onFullFilled = value => value;
+    if (typeof onRejected !== 'function') onRejected = reason => reason;
 
-    return new P((resolve, reject) => {
+    let called;
+
+    /**
+     * 为了要链式调用，自然是要返回一个promise
+     * 这里传入的resolve，reject更像是一个中介
+     * 为了将结果传递给下一个then的回调
+     * 另外，then中产生的promise对象，其executor就是下面这些代码
+     */
+    const p = new P((resolve, reject) => {
+
       switch (this.status) {
         case PENDING:
+
           this.onFullFilledArray.push(value => {
-            setTimeout(() => { // 使用setTimeout来模拟异步执行，虽然加入的是task
+
+            if (called) return;
+            called = true;
+
+            setTimeout(() => {
               try {
                 resolvePromise(p, onFullFilled(value), resolve, reject);
               } catch (err) {
                 reject(err);
               }
             });
+
           });
 
           this.onRejectedArray.push(reason => {
+
+            if (called) return;
+            called = true;
+
             setTimeout(() => {
               try {
                 resolvePromise(p, onRejected(reason)), resolve, reject;
@@ -59,9 +89,15 @@ class P {
                 reject(err);
               }
             });
+
           });
           break;
         case RESOLVED:
+
+          if (called) return;
+          called = true;
+
+          // 使用setTimeout来模拟异步执行，虽然加入的是task
           setTimeout(() => {
             try {
               resolvePromise(p, onFullFilled(this.value), resolve, reject);
@@ -69,8 +105,13 @@ class P {
               reject(err);
             }
           });
+
           break;
         case REJECTED:
+
+          if (called) return;
+          called = true;
+
           setTimeout(() => {
             try {
               resolvePromise(p, onRejected(this.reason)), resolve, reject;
@@ -78,12 +119,15 @@ class P {
               reject(err);
             }
           });
+
           break;
         default:
-          console.error('无法捕获到状态');
+          reject(new Error(`无法捕获到状态`))
           break;
       }
     });
+
+    return p;
   }
   // 其实就是执行 then 的第二个回调
   catch (onRejected) {
@@ -122,8 +166,8 @@ function resolvePromise (promise, result, resolve, reject) {
   try {
     if (typeof result === 'object' && result !== null && typeof result.then === 'function') {
       result.then(
-        res => resolvePromise(promise, res, resolve, reject),
-        err => reject(err)
+        val => resolvePromise(promise, val, resolve, reject),
+        rea => reject(rea)
       );
     } else {
       resolve(result);
@@ -133,29 +177,25 @@ function resolvePromise (promise, result, resolve, reject) {
   }
 }
 
-
-const p = new P((resolve, reject) => {
+/**
+ * 以下部分都是同步代码，而then中的代码会放入异步队列
+ */
+new P((resolve, reject) => {
   resolve(1);
-});
-
-p.then(res => {
-  console.log(res);
-  setTimeout(() => {
-    console.log(2);
-  }, 1000);
-  return 2;
 })
   .then(res => {
     console.log(res);
-    setTimeout(() => {
-      console.log(3);
-    }, 3000);
+    return 2;
+  })
+  .then(res => {
+    console.log(res);
     return new P(resolve => {
       resolve(4);
     });
   })
   .then(res => {
     console.log(res);
-  });;
+  });
+
 
 // export default P;
