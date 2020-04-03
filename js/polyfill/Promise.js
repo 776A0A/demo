@@ -134,7 +134,15 @@ class P {
     return this.then(undefined, onRejected);
   }
 
+  finally (cb) {
+    return this.then(
+      val => P.resolve(cb()).then(() => val),
+      rea => P.resolve(cb()).then(() => rea)
+    )
+  }
+
   static resolve (value) {
+    if (value instanceof P) return value;
     return new P(resolve => resolve(value));
   }
 
@@ -143,12 +151,37 @@ class P {
   }
 
   static race (promises) {
-    return P((resolve, reject) => promises.forEach(p => p.then(resolve, reject)));
+    return new P((resolve, reject) => promises.forEach(p => P.resolve(p).then(resolve, reject)));
   }
 
   static all (promises) {
-    const res = []
+
+    return new P((resolve, reject) => {
+
+      let i = 0;
+      const res = [];
+
+      promises.forEach((p, j) => {
+
+        P.resolve(p)
+          .then
+          (
+            data => {
+              i++; // 主要是用来记录到达了then几次
+              res[j] = data;
+              // 当到达次数为传入个数时，resolve
+              if (i === promises.length) {
+                resolve(res)
+              }
+            },
+            err => reject(err)
+          )
+
+      })
+    })
+
   }
+
 }
 
 /**
