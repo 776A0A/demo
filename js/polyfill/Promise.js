@@ -8,7 +8,7 @@ class P {
   constructor (executor) {
     this.status = PENDING;
     this.value = this.reason = undefined;
-    this.onFullFilledArray = [];
+    this.onFulfilledArray = [];
     this.onRejectedArray = [];
     this.pId = pId++;
     // debugger
@@ -17,10 +17,10 @@ class P {
       if (this.status === PENDING) {
         this.status = RESOLVED;
         this.value = value;
-        this.onFullFilledArray.forEach(fn => fn(this.value));
+        this.onFulfilledArray.forEach(fn => fn(this.value));
         console.log({
           pId: this.pId,
-          onFullFilledArray: this.onFullFilledArray
+          onFulfilledArray: this.onFulfilledArray
         });
       }
     };
@@ -40,13 +40,13 @@ class P {
     }
   }
 
-  then (onFullFilled, onRejected) {
+  then (onFulfilled, onRejected) {
     /**
      * 要注意下面执行的代码中this的指向，实际上是指向上一个promise
      */
 
     // 处理非函数的情况，直接将值返回，也就是值穿透
-    if (typeof onFullFilled !== 'function') onFullFilled = value => value;
+    if (typeof onFulfilled !== 'function') onFulfilled = value => value;
     if (typeof onRejected !== 'function') onRejected = reason => reason;
 
     let called;
@@ -62,14 +62,14 @@ class P {
       switch (this.status) {
         case PENDING:
 
-          this.onFullFilledArray.push(value => {
+          this.onFulfilledArray.push(value => {
 
             if (called) return;
             called = true;
 
             setTimeout(() => {
               try {
-                resolvePromise(p, onFullFilled(value), resolve, reject);
+                resolvePromise(p, onFulfilled(value), resolve, reject);
               } catch (err) {
                 reject(err);
               }
@@ -100,7 +100,7 @@ class P {
           // 使用setTimeout来模拟异步执行，虽然加入的是task
           setTimeout(() => {
             try {
-              resolvePromise(p, onFullFilled(this.value), resolve, reject);
+              resolvePromise(p, onFulfilled(this.value), resolve, reject);
             } catch (err) {
               reject(err);
             }
