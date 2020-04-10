@@ -2,10 +2,6 @@
 
 // 常用工具函数
 const utils = {
-  addEvent(dom, fn, type = 'click') {
-    dom.addEventListener(type, e => fn.call(e.target, e))
-    return this;
-  }
 }
 
 export default utils

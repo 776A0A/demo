@@ -47,7 +47,8 @@ class P {
 
     // 处理非函数的情况，直接将值返回，也就是值穿透
     if (typeof onFulfilled !== 'function') onFulfilled = value => value;
-    if (typeof onRejected !== 'function') onRejected = reason => reason;
+    // 当没有传入catch函数时，如果错误也依然会触发onRejected并抛出错误，这样使得该Promise的状态变为rejected
+    if (typeof onRejected !== 'function') onRejected = reason => { throw reason };
 
     let called;
 
@@ -143,7 +144,10 @@ class P {
 
   static resolve (value) {
     if (value instanceof P) return value;
-    return new P(resolve => resolve(value));
+    return new P((resolve, reject) => {
+      if (value && value.then && typeof value.then === 'function') value.then(resolve, reject);
+      else resolve(value)
+    });
   }
 
   static reject (reason) {
@@ -151,6 +155,7 @@ class P {
   }
 
   static race (promises) {
+    // P.resolve 将其转换为一个 promise
     return new P((resolve, reject) => promises.forEach(p => P.resolve(p).then(resolve, reject)));
   }
 
