@@ -11,3 +11,18 @@ const debounce = (fn, delay) => {
 
   }
 }
+
+/**
+ * 根据传入1或者-1确定遍历方向
+ * @param {Number 1|-1} direction 
+ */
+const createIndexFinder = direction => {
+  return function (arr, fn, ctx) {
+    const len = arr.length;
+    let i = direction > 0 ? 0 : len - 1;
+
+    for (; i >= 0 && i < len; i += direction) {
+      if (fn.call(ctx, arr[i], i, arr)) return i;
+    }
+  }
+}
