@@ -18,10 +18,6 @@ class P {
         this.status = RESOLVED;
         this.value = value;
         this.onFulfilledArray.forEach(fn => fn(this.value));
-        console.log({
-          pId: this.pId,
-          onFulfilledArray: this.onFulfilledArray
-        });
       }
     };
 

@@ -754,3 +754,6 @@ console.log(Collection.sizeOf(x)); // 0
 x.add('foo').add('a').add('b')
 console.log(Collection.sizeOf(x)); // 3
 console.log(Object.keys(x)); // ['0', '1', '2']
+
+const regExp1 = /\b([01]+b|\d+|[\da-f]+h)\b/
+const regExp2 = /\/\/.*|\/\*[^]*\*\//g
