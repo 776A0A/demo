@@ -1,4 +1,5 @@
 // 更快
+// fisher-yates算法
 const shuffle = arr => {
   const _arr = arr.concat();
 
@@ -18,13 +19,13 @@ const _shuffle = arr => {
 
   while (index < len) {
     ranNum = Math.floor(Math.random() * _arr.length);
- 
+
     res[index++] = _arr.splice(ranNum, 1)[0];
   }
 
   return res;
 };
-                                
+
 console.time()
 for (let i = 0; i < 100; i++) {
   shuffle(Array.from({ length: 10000 }))
