@@ -1,4 +1,5 @@
-const insertSort = (arr, from = 0, to = arr.length) => {
+const insertSort1 = (arr, from = 0, to = arr.length) => {
+    // 将第二个元素作为起始点
     for (let i = from + 1; i < to; i++) {
         const currItem = arr[i];
         for (let j = i - 1; j >= from; j--) {
@@ -18,6 +19,8 @@ const insertSort = (arr, from = 0, to = arr.length) => {
     return arr;
 }
 
-const arr = [3, 2, 5, 1, 5, 20, 1, 100, -1, -50, 6, 32, 24, -1000, -0, +0, 23,];
+// const arr = [3, 2, 5, 1, 5, 20, 1, 100, -1, -50, 6, 32, 24, -1000, -0, +0, 23,];
 
-console.log(insertSort(arr));
+// console.log(insertSort(arr));
+
+// export default insertSort;
