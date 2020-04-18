@@ -51,6 +51,64 @@ _.chain = function (obj) {
     return instance;
 }
 
+// _.iteratee = builtinIteratee = function(val, ctx) {
+//     return 
+// }
+
+// 防止命名冲突用，不过模块化后，这个函数就没用了
+const original_ = _;
+_.onConflict = function () {
+    return original_;
+}
+
+// 利用闭包保存一个值
+_.constant = val => () => val;
+// 空函数
+_.noop = () => { };
+
+// 获取对象的深层次值
+_.deepGet = function (obj, path) {
+    if (!Array.isArray(path)) throw Error(`path: ${path} 必须为一个数组`);
+    for (let i = 0, len = path.length; i < len; i++) {
+        if (obj == null) return void 0;
+        obj = obj[path[i]];
+    }
+    return obj;
+}
+
+// 取对象属性，更像是一个函数式的使用方式
+_.shallowProperty = function (key) {
+    return function (obj) {
+        return obj == null ? void 0 : obj[key];
+    }
+}
+
+// 先传入要取得值得键名，单值或者数组，再传入对象
+_.property = function (path) {
+    if (!Array.isArray(path)) return _.shallowProperty(path);
+    return function (obj) {
+        return _.deepGet(obj, path)
+    }
+}
+// 与property相反，先传入对象，再传入路径
+_.propertyOf = function (obj) {
+    if (obj == null) return () => { };
+    return function (path) {
+        return !Array.isArray(path) ? obj[path] : _.deepGet(obj, path);
+    }
+}
+
+// 取min与max之间的一个数，包括边界
+_.random = function (min, max) {
+    if (max == null) {
+        max = min;
+        min = 0;
+    }
+    return min + Math.floor(Math.random() * (max - min + 1));
+}
+
+// console.log(_.deepGet({ a: { b: { c: 5 } } }, ['a', 'b', 'c']));
+
 // 这个方法要直接放在原型上，因为如果放在 _ 上，链式调用的时候又会返回一个实例
 _.prototype.value = function () {
     return this._wrapped;
@@ -59,7 +117,7 @@ _.prototype.value = function () {
 // 将 _ 上的方法挂载到 _ 实例的原型上
 _.mixin(_);
 
-console.dir(_);
+// console.dir(_);
 
 
 _.mixin({
@@ -67,7 +125,7 @@ _.mixin({
 });
 
 
-console.log(_.chain(4, 5).addOne().addOne().addOne().value());
+// console.log(_.chain(4, 5).addOne().addOne().addOne().value());
 
 
 

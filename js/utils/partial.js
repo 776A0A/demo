@@ -1,13 +1,13 @@
 const partial = (fn, ...args) => {
   return function (..._args) {
-    let argsArr = [];
 
     for (let i = 0, len = args.length; i < len; i++) {
-      argsArr.push(args[i] ? args[i] : _args.shift())
+      args[i] ? null : (args[i] = _args.shift())
     }
-    argsArr = argsArr.concat(..._args);
+    
+    args = args.concat(..._args)
 
-    return fn.call(this, ...argsArr)
+    return fn.call(this, ...args)
   }
 }
 
