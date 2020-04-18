@@ -109,6 +109,36 @@ _.random = function (min, max) {
 
 // console.log(_.deepGet({ a: { b: { c: 5 } } }, ['a', 'b', 'c']));
 
+// 转义工具
+const escapeMap = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#x27;',
+    '`': '&#x60;'
+}
+// 将对象的键值互换
+_.invert = obj => {
+    return Object.keys(obj).reduce((_obj, key) => {
+        _obj[obj[key]] = key;
+        return _obj;
+    }, {})
+}
+
+// 反向转义
+const unescapeMap = _.invert(escapeMap);
+
+// 生成escape函数
+function createEscapeFunc (map) {
+    return function (str) {
+        const regExp = new RegExp(`[${Object.keys(map).join('')}]`, 'g');
+        return regExp.test(str) && str.replace(regExp, matched => map[matched]);
+    }
+}
+_.escape = createEscapeFunc(escapeMap);
+_.unescape = createEscapeFunc(unescapeMap);
+
 // 这个方法要直接放在原型上，因为如果放在 _ 上，链式调用的时候又会返回一个实例
 _.prototype.value = function () {
     return this._wrapped;
