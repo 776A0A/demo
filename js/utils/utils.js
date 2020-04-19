@@ -21,6 +21,7 @@ const createIndexFinder = direction => {
     const len = arr.length;
     let i = direction > 0 ? 0 : len - 1;
 
+    // 注意判断条件
     for (; i >= 0 && i < len; i += direction) {
       if (fn.call(ctx, arr[i], i, arr)) return i;
     }

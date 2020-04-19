@@ -4,7 +4,7 @@ const regExp = {
     lineTerminator: /[\r\n\t]/g
 }
 
-// undersource 的方式
+// underscore 的方式
 function compiler (htmlText) {
 
     // 最后的|$是为了匹配最后，使得offset在最后有值

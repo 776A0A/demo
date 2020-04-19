@@ -15,6 +15,12 @@ const _ = function (obj) {
 }
 
 _.isFunction = obj => typeof obj === 'function';
+// 使用代码来帮你生成相似的函数
+['Arguments', 'Function', 'String', 'Number', 'Date', 'RegExp', 'Error'].forEach(type => {
+    _[`is${type}`] = function (obj) {
+        return Object.prototype.toString(obj) === `[object ${type}]`;
+    }
+})
 
 _.funcNames = obj => Object.keys(obj).filter(name => _.isFunction(obj[name]));
 
@@ -49,6 +55,71 @@ _.chain = function (obj) {
     const instance = _(obj);
     instance._chain = true;
     return instance;
+}
+
+
+
+/**
+ * 挑取对应的key，返回一个新对象
+ * 
+ * @param {Object} obj 
+ * @param {Function|Array|String} iteratee 返回布尔值
+ * @param {Array|String} [_keys]
+ */
+_.pick = function (obj, iteratee, ..._keys) {
+    /**
+     * 重要的是参数的处理，最后的处理逻辑是一样的，但前期的参数处理是前提
+     */
+
+    let keys;
+
+    if (typeof iteratee === 'function') {
+        // 是函数，则所有的key都要遍历
+        keys = Object.keys(obj);
+    } else {
+        // 没有传入处理函数，则将需要遍历的key处理后放入keys中
+        keys = _keys.unshift(iteratee) && _keys.flat();
+        iteratee = keyInObj;
+        obj = Object(obj);
+    }
+
+    return keys.reduce((res, key) => {
+        const val = obj[key];
+        if (iteratee(val, key, obj)) res[key] = val;
+        return res;
+    }, {});
+
+    function keyInObj (val, key, obj) {
+        return key in obj;
+    }
+}
+
+const createIndexFinder = dir => {
+    return function (arr, predicate, ctx) {
+        const length = arr.length;
+        predicate = predicate.bind(ctx || arr);
+        let index = dir > 0 ? 0 : length - 1;
+        for (; index >= 0 && index < length; index += dir) {
+            if (predicate(arr[index], index, arr)) return index;
+        }
+        return -1;
+    }
+}
+
+_.findIndex = createIndexFinder(1);
+_.findLastIndex = createIndexFinder(-1);
+
+// 寻找有序数组中的下标值
+_.sortedIndex = function (arr, val, iteratee, ctx) {
+    iteratee = iteratee || (val => val);
+    let high = arr.length, low = 0, mid = Math.floor((high + low) / 2);
+    while (high > low) {
+        if (iteratee(arr[mid]) === val) return mid;
+        else if (iteratee(arr[mid]) > val) high = mid;
+        else low = mid + 1;
+        mid = Math.floor((high + low) / 2);
+    }
+    return mid;
 }
 
 // _.iteratee = builtinIteratee = function(val, ctx) {
@@ -92,6 +163,7 @@ _.property = function (path) {
 }
 // 与property相反，先传入对象，再传入路径
 _.propertyOf = function (obj) {
+    // 如果obj为null或者undefined
     if (obj == null) return () => { };
     return function (path) {
         return !Array.isArray(path) ? obj[path] : _.deepGet(obj, path);
