@@ -3,12 +3,11 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>underscore</title>
 </head>
 
 <body>
-    <div id="result"></div>
+    <div id="res"></div>
     <script type="text/html" id="app">
         <%for ( var i = 0; i < data.length; i++ ) { %>
             <li>
@@ -17,21 +16,21 @@
                 </a>
             </li>
         <% } %>
+        <% console.log(1) %>
     </script>
     <script type="module">
-        import compiler from './compiler3.js';
         import _ from './index.js';
+        import t from './template.js';
 
-        console.log(_.sortedIndex([1, 2, 3, 4, 5], 5));
+        console.dir(_);
 
         var users = [
             { "name": "Byron", "url": "http://localhost" },
             { "name": "Casper", "url": "http://localhost" },
             { "name": "Frank", "url": "http://localhost" }
         ];
-
-        const text = document.getElementById('app').innerHTML
-        result.innerHTML = compiler(text)(users);
+        
+        res.innerHTML = t(document.getElementById('app').innerHTML)(users)
     </script>
 </body>
 
