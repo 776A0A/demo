@@ -1,4 +1,4 @@
-import render from './render.js.js';
+import render from './render.js';
 
 export default function Compile (selector, vm) {
   vm.$el = document.querySelector(selector);

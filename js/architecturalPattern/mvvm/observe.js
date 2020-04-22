@@ -4,7 +4,7 @@ import Dep from './dep.js';
 /**
  * 最开始只是做一层劫持，不做任何处理，但是会创建一个依赖池
  * 最开始是处理 options.data
- * 如果检测到值是对象会数组就会递归监听
+ * 如果检测到值是对象或数组就会递归监听
  * @class Observe
  */
 class Observe {

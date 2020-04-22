@@ -1,6 +1,6 @@
 import { proxy } from './proxy.js';
 import Compile from './compile.js';
-import initLiftCircle from './lifecircle.js';
+import initLifeCycle from './lifecycle.js';
 import initData from './initData.js';
 import initComputed from './initComputed.js';
 
@@ -14,5 +14,5 @@ export default function Mvvm (options = {}) {
 
   new Compile(options.el, this);
 
-  initLiftCircle(this);
+  initLifeCycle(this);
 }
