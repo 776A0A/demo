@@ -1,5 +1,5 @@
-import Watcher from './watcher.js.js';
-import { getVal } from './utils.js.js';
+import Watcher from './watcher.js';
+import { getVal } from './utils.js';
 
 export default function render (frag, vm) {
   Array.from(frag.childNodes).forEach(node => {

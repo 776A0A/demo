@@ -1,5 +1,5 @@
-import Dep from './dep.js.js';
-import { getVal } from './utils.js.js';
+import Dep from './dep.js';
+import { getVal } from './utils.js';
 
 export default class Watcher {
   constructor (vm, exp, fn) {

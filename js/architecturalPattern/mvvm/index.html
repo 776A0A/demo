@@ -35,12 +35,10 @@
       },
       computed: {
         getAC() {
-          console.log('computed');
           return this.a.b + this.c;
         }
       },
       mounted() {
-        console.log(`mounted`);
       }
     });
 
@@ -49,6 +47,8 @@
     });
 
     console.log(vm);
+
+    
   </script>
 </body>
 
